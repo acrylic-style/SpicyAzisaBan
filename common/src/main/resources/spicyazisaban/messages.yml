@@ -334,7 +334,9 @@ commands:
       - "%PREFIX%&c&o%PLAYER%&eは&c%SINCE%前&eから%STATUS%&eです。"
       - "&7UUID &8> &e&o%UUID%"
       - "&7最初のログイン &8> &e&o%FIRST_LOGIN%"
+      - "&7最初のログイン試行 &8> &e&o%FIRST_LOGIN_ATTEMPT%"
       - "&7最近のログイン &8> &e&o%LAST_LOGIN%"
+      - "&7最近のログイン試行 &8> &e&o%LAST_LOGIN_ATTEMPT%"
       - "&7過去の名前 &8> &e&o%NAME_HISTORY%"
       - "&7最近のIPアドレス &8> &e&o%IP% &7(&e%HOSTNAME%&7)"
       - "&7過去のすべてのIPアドレス &8> &e&o%IP_HISTORY%"
@@ -361,7 +363,7 @@ commands:
     # Available variables: %TARGET%
     header: "%PREFIX%&c&o%TARGET%&7の履歴:"
     # Available variables: variables of punishment + %DATE%, %STRIKETHROUGH_IF_UNPUNISHED%, %UNPUNISH_REASON%,
-    # %UNPUNISH_ID%, %UNPUNISH_OPERATOR%
+    # %UNPUNISH_ID%, %UNPUNISH_OPERATOR%, %FLAGS%
     layout:
       - "&8[&e%DATE%&8] &8(&e/%CMD_PREFIX%proofs %ID%&7で証拠を表示&8)"
       - "&c名前/IP &8> &7&o%PLAYER%"
@@ -371,6 +373,7 @@ commands:
       - "&cID &8> &7&o#%ID% %UNPUNISH_ID%"
       - "&cサーバー &8> &7&o%SERVER%"
       - "&c執行者 &8> &7&o%OPERATOR% %UNPUNISH_OPERATOR%"
+      - "&cフラグ &8> &7&o%FLAGS%"
     # Available variables: %CURRENT_PAGE%, %MAX_PAGE%, %COUNT%
     footer: "&7ページ &e&o%CURRENT_PAGE%&7/&e&o%MAX_PAGE% &8| &7処罰件数: &e&o%COUNT%"
     # Available variables: %REASON%

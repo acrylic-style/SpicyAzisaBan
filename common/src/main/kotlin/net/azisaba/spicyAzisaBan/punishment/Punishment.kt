@@ -590,6 +590,7 @@ data class Punishment(
                     "unpunish_id" to unpunishId,
                     "unpunish_operator" to unpunishOperator,
                     "strikethrough_if_unpunished" to strikethroughIfUnpunished,
+                    "flags" to flags.joinToString(", ") { it.name }
                 )
                 .translate()
         )
