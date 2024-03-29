@@ -404,7 +404,7 @@ data class Punishment(
         }
     }
 
-    fun doSomethingIfOnline(actor: Actor? = null) = async<Unit> {
+    fun onPunished(actor: Actor? = null) = async<Unit> {
         val notifyTargetServer = (if (server == "global" && actor is PlayerActor) actor.getServer()?.name else server) ?: server
         // notes are ignored entirely
         if (type == PunishmentType.NOTE) return@async it.resolve()
@@ -506,7 +506,7 @@ data class Punishment(
         if (cancel) return@async
         SpicyAzisaBan.instance.connection.sendEvent(EventType.ADD_PUNISHMENT, JSONObject().put("id", id)).complete()
         clearCache(id, sendEvent = true)
-        doSomethingIfOnline(actor).complete()
+        onPunished(actor).complete()
         return@async context.resolve(
             Punishment(
                 id,

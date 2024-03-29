@@ -47,7 +47,7 @@ class TimerTasks(private val connection: SQLConnection) {
                             SpicyAzisaBan.debug("Ignoring event ${e.id} because the punishment #$id is no longer active")
                             continue
                         }
-                        p.doSomethingIfOnline()
+                        p.onPunished()
                         if (!SpicyAzisaBan.instance.connection.eventsByUs.contains(e.id)) {
                             p.notifyToAll(sendWebhook = !e.handled)
                         }
