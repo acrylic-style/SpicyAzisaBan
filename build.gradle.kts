@@ -62,8 +62,7 @@ repositories {
     // mavenLocal()
     mavenCentral()
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
-    maven { url = uri("https://repo.blueberrymc.net/repository/maven-public/") }
-    maven { url = uri("https://repo.acrylicstyle.xyz/repository/maven-public/") }
+    maven { url = uri("https://repo.azisaba.net/repository/maven-public/") }
 }
 
 subprojects {
@@ -74,8 +73,7 @@ subprojects {
         // mavenLocal()
         mavenCentral()
         maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
-        maven { url = uri("https://repo.blueberrymc.net/repository/maven-public/") }
-        maven { url = uri("https://repo.acrylicstyle.xyz/repository/maven-public/") }
+        maven { url = uri("https://repo.azisaba.net/repository/maven-public/") }
     }
 
     apply {
