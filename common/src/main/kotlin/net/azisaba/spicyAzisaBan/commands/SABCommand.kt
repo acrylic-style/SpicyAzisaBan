@@ -119,8 +119,6 @@ object SABCommand: Command() {
                         if (args[2] == "add" || args[2] == "remove") {
                             if (args.size <= 3) {
                                 return@then actor.sendGroupHelp()
-                            } else if (!SpicyAzisaBan.instance.getServers().map { it.value.name }.any { it == args[3] }) {
-                                return@then actor.send(SABMessages.Commands.General.invalidServer.replaceVariables().translate())
                             }
                         }
                         when (args[2]) {
