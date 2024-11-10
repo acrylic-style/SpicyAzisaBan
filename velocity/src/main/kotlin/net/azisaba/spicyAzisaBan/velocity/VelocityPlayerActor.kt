@@ -11,6 +11,7 @@ import net.kyori.adventure.util.Ticks
 import java.net.SocketAddress
 import java.util.UUID
 import java.util.concurrent.CompletionException
+import net.kyori.adventure.text.Component as KComponent
 import net.kyori.adventure.title.Title as ATitle
 
 class VelocityPlayerActor(private val player: Player): VelocityActor(player), PlayerActor {
@@ -28,7 +29,7 @@ class VelocityPlayerActor(private val player: Player): VelocityActor(player), Pl
     }
 
     override fun disconnect(vararg reason: Component) {
-        return player.disconnect(TextComponent.ofChildren(*reason.toVelocity()))
+        return player.disconnect(KComponent.textOfChildren(*reason.toVelocity()))
     }
 
     override fun getRemoteAddress(): SocketAddress = player.remoteAddress
@@ -45,9 +46,9 @@ class VelocityPlayerActor(private val player: Player): VelocityActor(player), Pl
 
     override fun sendTitle(title: Title) {
         val adventure = ATitle.title(
-            TextComponent.ofChildren(*title.title.toVelocity()),
-            TextComponent.ofChildren(*title.subTitle.toVelocity()),
-            ATitle.Times.of(
+            KComponent.textOfChildren(*title.title.toVelocity()),
+            KComponent.textOfChildren(*title.subTitle.toVelocity()),
+            ATitle.Times.times(
                 Ticks.duration(title.fadeIn.toLong()),
                 Ticks.duration(title.stay.toLong()),
                 Ticks.duration(title.fadeOut.toLong())
