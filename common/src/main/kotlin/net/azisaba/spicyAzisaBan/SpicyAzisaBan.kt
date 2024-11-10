@@ -143,7 +143,7 @@ abstract class SpicyAzisaBan {
         initDatabase()
         if (getPlatformType() != PlatformType.CLI) {
             DatabaseMigration.run().complete()
-            LOGGER.info("Supported event types: ${EventType.values().joinToString(", ") { it.name.lowercase() }}")
+            LOGGER.info("Supported event types: ${EventType.entries.joinToString(", ") { it.name.lowercase() }}")
         }
         val currentDatabaseVersion = settings.getDatabaseVersion().complete()
         if (currentDatabaseVersion != SQLConnection.CURRENT_DATABASE_VERSION) {

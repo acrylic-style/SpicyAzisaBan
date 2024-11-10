@@ -16,7 +16,7 @@ import net.azisaba.spicyAzisaBan.util.Util.disconnect
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.velocity.VelocityPlayerActor
 import net.azisaba.spicyAzisaBan.velocity.util.VelocityUtil.toVelocity
-import net.kyori.adventure.text.TextComponent
+import net.kyori.adventure.text.Component
 import util.kt.promise.rewrite.catch
 
 object EventListeners {
@@ -24,13 +24,13 @@ object EventListeners {
     fun onLogin(e: LoginEvent): EventTask = EventTask.async {
         var denied = false
         PunishmentChecker.checkLockdown(VelocityPlayerActor(e.player)) { reason ->
-            e.result = ResultedEvent.ComponentResult.denied(TextComponent.ofChildren(*reason.toVelocity()))
+            e.result = ResultedEvent.ComponentResult.denied(Component.textOfChildren(*reason.toVelocity()))
             denied = true
         }
         if (!denied) {
             PlayerData.createOrUpdate(VelocityPlayerActor(e.player)).catch { it.printStackTrace() }
             PunishmentChecker.checkGlobalBan(VelocityPlayerActor(e.player)) { reason ->
-                e.result = ResultedEvent.ComponentResult.denied(TextComponent.ofChildren(*reason.toVelocity()))
+                e.result = ResultedEvent.ComponentResult.denied(Component.textOfChildren(*reason.toVelocity()))
             }
         }
     }
@@ -45,6 +45,7 @@ object EventListeners {
         }.complete()
     }
 
+    @Suppress("DEPRECATION")
     @Subscribe
     fun onPlayerChat(e: PlayerChatEvent): EventTask = EventTask.async {
         val actor = VelocityPlayerActor(e.player)

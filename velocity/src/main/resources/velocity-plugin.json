@@ -1,0 +1,11 @@
+{
+  "id": "spicyazisaban",
+  "name": "SpicyAzisaBan",
+  "version": "@version@",
+  "url": "https://github.com/AzisabaNetwork/SpicyAzisaBan",
+  "authors": [
+    "AzisabaNetwork"
+  ],
+  "dependencies": [],
+  "main": "net.azisaba.spicyAzisaBan.velocity.VelocityPlugin"
+}

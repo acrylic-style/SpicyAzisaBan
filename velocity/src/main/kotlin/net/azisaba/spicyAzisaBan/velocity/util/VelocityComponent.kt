@@ -14,7 +14,7 @@ data class VelocityComponent(var component: KComponent): Component {
     override fun <T> setHoverEvent(action: HoverEvent.Action<T>, value: T) {
         if (action == HoverEvent.Action.SHOW_TEXT) {
             @Suppress("UNCHECKED_CAST")
-            component = component.hoverEvent(TextComponent.ofChildren(*(value as Array<Component>).toVelocity()))
+            component = component.hoverEvent(KComponent.textOfChildren(*(value as Array<Component>).toVelocity()))
         }
     }
 

@@ -6,7 +6,6 @@ import net.azisaba.spicyAzisaBan.common.PlayerActor
 import net.azisaba.spicyAzisaBan.common.ServerInfo
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.common.title.Title
-import util.UUIDUtil
 import java.net.SocketAddress
 import java.util.UUID
 
@@ -26,7 +25,7 @@ object CLIActor: PlayerActor, Actor {
     override fun isOnline(): Boolean = true
 
     override val name: String = "CONSOLE"
-    override val uniqueId: UUID = UUIDUtil.NIL
+    override val uniqueId: UUID = UUID(0, 0)
 
     override fun sendMessage(component: Component) {
         println((component as SimpleComponent).getText())

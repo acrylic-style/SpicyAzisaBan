@@ -1,15 +1,14 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-    kotlin("jvm") version "1.6.10"
-    kotlin("kapt") version "1.6.10"
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    kotlin("jvm") version "2.0.21"
+    id("com.gradleup.shadow") version "8.3.3"
     `maven-publish`
     `java-library`
 }
 
 group = "net.azisaba.spicyazisaban"
-version = "0.3.0-${getBranch()}-${getGitHash()}${if (hasUncommittedChanges()) "-debug" else ""}"
+version = "1.0.0-${getBranch()}-${getGitHash()}${if (hasUncommittedChanges()) "-debug" else ""}"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -33,7 +32,7 @@ fun getGitHash(): String {
             standardOutput = stdout
         }
         stdout.toString().trim()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         val ref = file("./.git/HEAD").readText().replace("^.*: (.*)$".toRegex(), "$1").trim(' ', '\n')
         println("Reading file ${file("./.git/$ref").absolutePath}")
         file("./.git/$ref").readText().trim(' ', '\n').substring(0..7)
@@ -48,7 +47,7 @@ fun hasUncommittedChanges(): Boolean {
             standardOutput = stdout
         }
         stdout.toString().trim().isNotBlank()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         false
     }
 }
@@ -78,8 +77,7 @@ subprojects {
 
     apply {
         plugin("org.jetbrains.kotlin.jvm")
-        plugin("org.jetbrains.kotlin.kapt")
-        plugin("com.github.johnrengelman.shadow")
+        plugin("com.gradleup.shadow")
         plugin("maven-publish")
         plugin("java-library")
     }
@@ -91,37 +89,14 @@ subprojects {
     }
 
     tasks {
-        compileKotlin {
-            kotlinOptions.jvmTarget = "17"
-        }
-
-        compileTestKotlin {
-            kotlinOptions.jvmTarget = "17"
-        }
-
         test {
             useJUnitPlatform()
         }
 
-        kapt {
-            this.javacOptions { this.option("source", 17) }
-        }
-
         processResources {
+            doNotTrackState("bungee.yml should be updated every time")
             filteringCharset = "UTF-8"
             from(sourceSets.main.get().resources.srcDirs) {
-                include("**")
-
-                val tokenReplacementMap = mapOf(
-                    "version" to project.version,
-                    "name" to project.rootProject.name,
-                    "debugBuild" to hasUncommittedChanges().toString(),
-                    "devBuild" to (getBranch() != "main").toString(),
-                )
-
-                filter<org.apache.tools.ant.filters.ReplaceTokens>("tokens" to tokenReplacementMap)
-            }
-            from(sourceSets.main.get().allSource.srcDirs) {
                 include("**")
 
                 val tokenReplacementMap = mapOf(
@@ -173,23 +148,6 @@ subprojects {
     }
 
     dependencies {
-        implementation("xyz.acrylicstyle.util:maven:0.16.6")
-        implementation("net.blueberrymc:native-util:2.1.0")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
-        implementation("xyz.acrylicstyle.util:all:0.16.6") {
-            exclude("com.google.guava", "guava")
-            exclude("org.reflections", "reflections")
-            exclude("org.json", "json")
-            exclude("org.yaml", "snakeyaml")
-            exclude("xyz.acrylicstyle.util", "maven")
-        }
-        implementation("xyz.acrylicstyle:sequelize4j:0.6.3") {
-            exclude("xyz.acrylicstyle", "java-util-all")
-        }
-        implementation("xyz.acrylicstyle:minecraft-util:1.0.0") {
-            exclude("xyz.acrylicstyle", "java-util-all")
-        }
-        compileOnly("org.mariadb.jdbc:mariadb-java-client:2.7.3")
         testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     }
 }
@@ -221,10 +179,6 @@ allprojects {
     }
 }
 
-println("Deleting cached bungee.yml")
-file("./build/resources/main/bungee.yml").apply {
-    if (exists()) delete()
-}
 println("Version: ${project.version}")
 println("Debug build: ${hasUncommittedChanges()}")
 println("Dev build: ${project.version.toString().contains("-dev")}")

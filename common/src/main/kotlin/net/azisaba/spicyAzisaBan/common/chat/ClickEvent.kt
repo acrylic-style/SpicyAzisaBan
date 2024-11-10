@@ -1,7 +1,7 @@
 package net.azisaba.spicyAzisaBan.common.chat
 
 class ClickEvent {
-    class Action<@Suppress("unused") T> {
+    class Action<T> {
         companion object {
             val RUN_COMMAND = Action<String>()
         }

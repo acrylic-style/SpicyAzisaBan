@@ -1,12 +1,11 @@
 repositories {
-    maven { url = uri("https://nexus.velocitypowered.com/repository/maven-public/") }
+    maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
 }
 
 dependencies {
     implementation(project(":common"))
-    compileOnly("com.velocitypowered:velocity-api:3.0.1")
-    kapt("com.velocitypowered:velocity-api:3.0.1")
-    testImplementation("com.velocitypowered:velocity-api:3.0.1")
+    compileOnly("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
+    testImplementation("com.velocitypowered:velocity-api:3.4.0-SNAPSHOT")
 }
 
 tasks {
