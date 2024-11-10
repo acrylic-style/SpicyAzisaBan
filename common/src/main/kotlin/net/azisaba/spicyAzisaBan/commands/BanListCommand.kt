@@ -13,6 +13,7 @@ import net.azisaba.spicyAzisaBan.common.command.Command
 import net.azisaba.spicyAzisaBan.punishment.Punishment
 import net.azisaba.spicyAzisaBan.punishment.PunishmentType
 import net.azisaba.spicyAzisaBan.util.Util.async
+import net.azisaba.spicyAzisaBan.util.Util.convert
 import net.azisaba.spicyAzisaBan.util.Util.filterArgKeys
 import net.azisaba.spicyAzisaBan.util.Util.filtr
 import net.azisaba.spicyAzisaBan.util.Util.send
@@ -103,13 +104,13 @@ object BanListCommand: Command() {
             val backText = Component.text("${if (newPage > 1) newPage - 1 else "-"} << ", ChatColor.GRAY)
             if (newPage > 1) {
                 backText.setColor(ChatColor.YELLOW)
-                backText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, Component.fromLegacyText(SABMessages.General.previousPage.translate()))
+                backText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(SABMessages.General.previousPage.translate().convert()))
                 backText.setClickEvent(ClickEvent.Action.RUN_COMMAND, "/${SABConfig.prefix}banlist page=${newPage - 1} ${if (active) "--active" else ""} ${if (all) "--all" else ""} ${if (server != null) "server=\"$server\"" else ""} ${if (punishmentType != null) "type=${punishmentType.name}" else ""}")
             }
             val nextText = Component.text(" >> ${if (newPage < maxPage) newPage + 1 else "-"}", ChatColor.GRAY)
             if (newPage < maxPage) {
                 nextText.setColor(ChatColor.YELLOW)
-                nextText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, Component.fromLegacyText(SABMessages.General.nextPage.translate()))
+                nextText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(SABMessages.General.nextPage.translate().convert()))
                 nextText.setClickEvent(ClickEvent.Action.RUN_COMMAND, "/${SABConfig.prefix}banlist page=${newPage + 1} ${if (active) "--active" else ""} ${if (all) "--all" else ""} ${if (server != null) "server=\"$server\"" else ""} ${if (punishmentType != null) "type=${punishmentType.name}" else ""}")
             }
             text.addChildren(backText)

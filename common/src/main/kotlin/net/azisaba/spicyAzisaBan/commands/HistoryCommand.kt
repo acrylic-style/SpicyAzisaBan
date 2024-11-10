@@ -14,6 +14,7 @@ import net.azisaba.spicyAzisaBan.punishment.Punishment
 import net.azisaba.spicyAzisaBan.sql.SQLConnection
 import net.azisaba.spicyAzisaBan.struct.PlayerData
 import net.azisaba.spicyAzisaBan.util.Util.async
+import net.azisaba.spicyAzisaBan.util.Util.convert
 import net.azisaba.spicyAzisaBan.util.Util.filterArgKeys
 import net.azisaba.spicyAzisaBan.util.Util.filtr
 import net.azisaba.spicyAzisaBan.util.Util.isValidIPAddress
@@ -177,7 +178,7 @@ object HistoryCommand: Command() {
             val backText = Component.text("${if (page > 1) page - 1 else "-"} << ")
             if (page > 1) {
                 backText.setColor(ChatColor.YELLOW)
-                backText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, Component.fromLegacyText(SABMessages.General.previousPage.translate()))
+                backText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(SABMessages.General.previousPage.translate().convert()))
                 backText.setClickEvent(ClickEvent.Action.RUN_COMMAND, "/${SABConfig.prefix}history target=$target page=${page - 1} ${if (active) "--active" else ""} ${if (all) "--all" else ""} ${if (ipOpt) "-i" else ""} ${if (only) "-o" else ""}")
             } else {
                 backText.setColor(ChatColor.GRAY)
@@ -185,7 +186,7 @@ object HistoryCommand: Command() {
             val nextText = Component.text(" >> ${if (page < maxPage) page + 1 else "-"}")
             if (page < maxPage) {
                 nextText.setColor(ChatColor.YELLOW)
-                nextText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, Component.fromLegacyText(SABMessages.General.nextPage.translate()))
+                nextText.setHoverEvent(HoverEvent.Action.SHOW_TEXT, arrayOf(SABMessages.General.nextPage.translate().convert()))
                 nextText.setClickEvent(ClickEvent.Action.RUN_COMMAND, "/${SABConfig.prefix}history target=$target page=${page + 1} ${if (active) "--active" else ""} ${if (all) "--all" else ""} ${if (ipOpt) "-i" else ""} ${if (only) "-o" else ""}")
             } else {
                 nextText.setColor(ChatColor.GRAY)

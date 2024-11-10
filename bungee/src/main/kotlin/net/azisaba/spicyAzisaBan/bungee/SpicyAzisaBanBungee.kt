@@ -10,6 +10,7 @@ import net.azisaba.spicyAzisaBan.common.ServerInfo
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.common.command.Command
 import net.azisaba.spicyAzisaBan.common.scheduler.ScheduledTask
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import net.md_5.bungee.api.ProxyServer
 import net.md_5.bungee.api.chat.TextComponent
 import java.io.File
@@ -64,4 +65,14 @@ class SpicyAzisaBanBungee: SpicyAzisaBan() {
     override fun getConsoleActor(): Actor = BungeeActor(server.console)
 
     override fun getDataFolder(): Path = File("./plugins/SpicyAzisaBan").toPath()
+
+    override fun convertComponent(component: net.kyori.adventure.text.Component): Component {
+        return LegacyComponentSerializer.builder()
+            .character('§')
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build()
+            .serialize(component)
+            .let { TextComponent.fromLegacyText(it) }
+            .let { TextComponent(*it).toCommon() }
+    }
 }

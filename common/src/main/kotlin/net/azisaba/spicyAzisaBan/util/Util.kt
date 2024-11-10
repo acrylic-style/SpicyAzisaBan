@@ -15,6 +15,8 @@ import net.azisaba.spicyAzisaBan.punishment.PunishmentType
 import net.azisaba.spicyAzisaBan.sql.SQLConnection
 import net.azisaba.spicyAzisaBan.struct.PlayerData
 import net.azisaba.spicyAzisaBan.util.contexts.ServerContext
+import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import util.StringReader
 import util.UUIDUtil
 import util.concurrent.ref.DataCache
@@ -45,13 +47,15 @@ object Util {
         }
     }
 
-    fun PlayerActor.disconnect(message: String) {
-        message.split("\\n|\\\\n".toRegex()).forEach { msg ->
-            disconnect(*Component.fromLegacyText(msg.replace("  ", " ${ChatColor.RESET} ${ChatColor.RESET}")))
-        }
+    fun Actor.send(message: Component) {
+        sendMessage(message)
     }
 
-    fun Actor.sendDelayed(timeInMillis: Long, message: String) {
+    fun Actor.send(component: net.kyori.adventure.text.Component) {
+        sendMessage(component)
+    }
+
+    fun Actor.sendDelayed(timeInMillis: Long, message: net.kyori.adventure.text.Component) {
         SpicyAzisaBan.instance.schedule(timeInMillis, TimeUnit.MILLISECONDS) { send(message) }
     }
 
@@ -192,12 +196,21 @@ object Util {
     /**
      * Returns colored string of the boolean.
      */
-    fun Boolean.toMinecraft() = if (this) "${ChatColor.GREEN}true" else "${ChatColor.RED}false"
+    fun Boolean.toMinecraft() = if (this) "<green>true</green>" else "<red>false</red>"
 
-    /**
-     * Translates '&' into section char.
-     */
-    fun String.translate(): String = ChatColor.translateAlternateColorCodes('&', this)
+    fun String.translate(): net.kyori.adventure.text.Component {
+        val legacySectionString = ChatColor.translateAlternateColorCodes('&', this)
+            .replace("  ", "<white> </white><white> </white>")
+        try {
+            // try to parse as mini message
+            return MiniMessage.miniMessage().deserialize(legacySectionString)
+        } catch (_: Exception) {
+            // fallback to legacy component
+            val component = LegacyComponentSerializer.legacySection().deserialize(legacySectionString)
+            val miniMessageString = MiniMessage.miniMessage().serialize(component)
+            return MiniMessage.miniMessage().deserialize(miniMessageString)
+        }
+    }
 
     fun List<String>.filterArgKeys(args: Array<String>): List<String> {
         val list = args.map { it.replace("(=.*)".toRegex(), "") }
@@ -287,13 +300,6 @@ object Util {
         } else {
             context.resolve(profile)
         }
-    }
-
-    /**
-     * Kicks the player with specified reason. The string will be automatically converted into TextComponent.
-     */
-    fun PlayerActor.kick(reason: String) {
-        this.disconnect(*Component.fromLegacyText(reason.replace("  ", " ${ChatColor.RESET} ${ChatColor.RESET}")))
     }
 
     /**
@@ -416,25 +422,9 @@ object Util {
         def
     }
 
-    /**
-     * Extension method to allow `ChatColor.XXXX + string`.
-     */
-    operator fun ChatColor.plus(s: String) = "$this$s"
-
-    fun String.getCurrentColor(char: Char = '§'): ChatColor {
-        val reader = StringReader(this.reversed())
-        while (!reader.isEOF) {
-            val first = reader.readFirst().first()
-            if (reader.peek() == char) {
-                ChatColor.getByChar(first)?.let { return it }
-            }
-        }
-        return ChatColor.WHITE
-    }
-
     fun String.toUUIDOrNull() = try {
         UUID.fromString(this)!!
-    } catch (e: IllegalArgumentException) {
+    } catch (_: IllegalArgumentException) {
         null
     }
 
@@ -517,7 +507,13 @@ object Util {
     fun DataCache<*>.isNotExpired() = System.currentTimeMillis() <= this.ttl
 
     fun InvalidArgumentException.toComponent(): Component {
-        val errorComponent = Component.text(SABMessages.General.invalidSyntax.replaceVariables().format(message).translate(), ChatColor.RED)
+        val errorComponent =
+            SABMessages.General.invalidSyntax
+                .replaceVariables()
+                .format(message)
+                .translate()
+                .convert()
+                .apply { setColor(ChatColor.RED) }
         val context = this.context ?: return errorComponent
         val prev = context.peekWithAmount(-min(context.index(), 15))
         var next = context.peekWithAmount(
@@ -554,4 +550,11 @@ object Util {
     }
 
     fun <T> List<T>.limit(max: Int): List<T> = this.subList(0, min(max, this.size))
+
+    fun net.kyori.adventure.text.Component.convert() = SpicyAzisaBan.instance.convertComponent(this)
+
+    fun net.kyori.adventure.text.Component.toLegacySectionText() =
+        LegacyComponentSerializer.legacySection().serialize(this)
+
+    fun net.kyori.adventure.text.Component.toMiniMessage() = MiniMessage.miniMessage().serialize(this)
 }

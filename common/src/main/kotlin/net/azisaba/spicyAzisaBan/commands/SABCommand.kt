@@ -54,7 +54,7 @@ object SABCommand: Command() {
     private val groupRemoveConfirmation = mutableMapOf<UUID, String>()
 
     private fun Actor.sendHelp() {
-        send("$PREFIX${ChatColor.GREEN}SpicyAzisaBan commands")
+        send("$PREFIX<green>SpicyAzisaBan commands".translate())
         if (hasPermission("sab.command.spicyazisaban.group")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab group <group>")
         if (hasPermission("sab.command.spicyazisaban.info")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab info")
         if (hasPermission("sab.command.spicyazisaban.creategroup")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab creategroup <group>")
@@ -166,7 +166,7 @@ object SABCommand: Command() {
                 SpicyAzisaBan.instance.connection.punishmentHistory
                     .delete(FindOptions.Builder().addWhere("id", id).build())
                     .then { list ->
-                        if (list.isEmpty()) return@then actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().translate().format(id))
+                        if (list.isEmpty()) return@then actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().format(id).translate())
                         val v = Punishment.fromTableData(list[0]).getVariables().complete()
                         actor.send(SABMessages.Commands.Sab.removedFromPunishmentHistory.replaceVariables(v).translate())
                     }
@@ -181,7 +181,7 @@ object SABCommand: Command() {
                 SpicyAzisaBan.instance.connection.punishments
                     .delete(FindOptions.Builder().addWhere("id", id).build())
                     .then { list ->
-                        if (list.isEmpty()) return@then actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().translate().format(id))
+                        if (list.isEmpty()) return@then actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().format(id).translate())
                         val v = Punishment.fromTableData(list[0]).getVariables().complete()
                         actor.send(SABMessages.Commands.Sab.removedFromPunishment.replaceVariables(v).translate())
                     }

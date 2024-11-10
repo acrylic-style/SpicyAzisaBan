@@ -6,7 +6,6 @@ import com.velocitypowered.api.proxy.Player
 import net.azisaba.spicyAzisaBan.common.Actor
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.velocity.util.VelocityUtil.toVelocity
-import net.kyori.adventure.text.TextComponent
 import java.util.UUID
 
 open class VelocityActor(val source: CommandSource): Actor {
@@ -33,7 +32,7 @@ open class VelocityActor(val source: CommandSource): Actor {
     }
 
     override fun sendMessage(vararg components: Component) {
-        source.sendMessage(TextComponent.ofChildren(*components.toVelocity()))
+        source.sendMessage(net.kyori.adventure.text.Component.textOfChildren(*components.toVelocity()))
     }
 
     override fun hasPermission(permission: String): Boolean = source.hasPermission(permission)

@@ -18,5 +18,7 @@ dependencies {
     }
     api("org.ow2.asm:asm:9.7.1")
     api("org.ow2.asm:asm-commons:9.7.1")
+    api("net.kyori:adventure-text-minimessage:4.17.0")
+    api("net.kyori:adventure-text-serializer-legacy:4.17.0")
     compileOnlyApi("org.mariadb.jdbc:mariadb-java-client:3.5.0")
 }

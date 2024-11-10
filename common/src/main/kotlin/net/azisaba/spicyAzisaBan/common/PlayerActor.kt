@@ -2,6 +2,7 @@ package net.azisaba.spicyAzisaBan.common
 
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.common.title.Title
+import net.azisaba.spicyAzisaBan.util.Util.convert
 
 interface PlayerActor: Actor, PlayerConnection {
     /**
@@ -18,6 +19,8 @@ interface PlayerActor: Actor, PlayerConnection {
      * Disconnects a player with provided reason.
      */
     fun disconnect(vararg reason: Component)
+
+    fun disconnect(reason: net.kyori.adventure.text.Component) = disconnect(reason.convert())
 
     /**
      * Connect the player to specific server. If BungeeCord, the method might return before the player connects to the

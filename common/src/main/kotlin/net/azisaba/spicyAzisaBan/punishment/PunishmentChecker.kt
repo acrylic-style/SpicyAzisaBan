@@ -12,9 +12,9 @@ import net.azisaba.spicyAzisaBan.common.ServerInfo
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.struct.PlayerData
 import net.azisaba.spicyAzisaBan.util.Util
+import net.azisaba.spicyAzisaBan.util.Util.convert
 import net.azisaba.spicyAzisaBan.util.Util.getIPAddress
 import net.azisaba.spicyAzisaBan.util.Util.getServerName
-import net.azisaba.spicyAzisaBan.util.Util.kick
 import net.azisaba.spicyAzisaBan.util.Util.reconstructIPAddress
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.util.Util.sendDelayed
@@ -34,10 +34,12 @@ object PunishmentChecker {
                 }
                 val exists = PlayerData.isExists(connection.uniqueId).complete()
                 if (!exists) {
-                    deny(Component.fromLegacyText(SABMessages.Commands.Lockdown.lockdown.replaceVariables().translate()))
+                    deny(arrayOf(SABMessages.Commands.Lockdown.lockdown.replaceVariables().translate().convert()))
                     val message = SABMessages.Commands.Lockdown.lockdownJoinAttempt
-                        .replaceVariables("player" to (connection.name ?: connection.uniqueId).toString(), "IP_ADDRESS" to connection.getRemoteAddress().getIPAddress().toString()).translate()
-                        .translate()
+                        .replaceVariables(
+                            "player" to (connection.name ?: connection.uniqueId).toString(),
+                            "IP_ADDRESS" to connection.getRemoteAddress().getIPAddress().toString()
+                        ).translate()
                     SpicyAzisaBan.instance.getPlayers().filter { it.hasPermission("sab.lockdown") }.forEach { it.send(message) }
                     SpicyAzisaBan.instance.getConsoleActor().send(message)
                 }
@@ -51,17 +53,17 @@ object PunishmentChecker {
             if (!res) {
                 SpicyAzisaBan.LOGGER.warning("Could not check lockdown state for ${connection.uniqueId} (Timed out, > 800 ms)")
                 if (SABConfig.database.failsafe) {
-                    deny(Component.fromLegacyText(SABMessages.General.error.replaceVariables().translate()))
+                    deny(arrayOf(SABMessages.General.error.replaceVariables().translate().convert()))
                 }
             }
         }.catch {
             SpicyAzisaBan.LOGGER.warning("Could not check lockdown state for ${connection.uniqueId}")
             it.printStackTrace()
             if (SABConfig.database.failsafe) {
-                deny(Component.fromLegacyText(SABMessages.General.errorDetailed.replaceVariables(
+                deny(arrayOf(SABMessages.General.errorDetailed.replaceVariables(
                     "EXCEPTION_CLASS_NAME" to it.javaClass.name,
                     "EXCEPTION_MESSAGE" to (it.message ?: "null"),
-                ).translate()))
+                ).translate().convert()))
             }
         }.complete()
     }
@@ -79,7 +81,7 @@ object PunishmentChecker {
                     "global"
                 ).complete()
                 if (p != null) {
-                    deny(Component.fromLegacyText(p.getBannedMessage().complete()))
+                    deny(arrayOf(p.getBannedMessage().complete().convert()))
                 }
                 val time = System.currentTimeMillis() - start
                 if (time > 1000) {
@@ -91,17 +93,17 @@ object PunishmentChecker {
             if (!res) {
                 SpicyAzisaBan.LOGGER.warning("Could not check punishments for ${connection.uniqueId} (Timed out, > 1500 ms)")
                 if (SABConfig.database.failsafe) {
-                    deny(Component.fromLegacyText(SABMessages.General.error.replaceVariables().translate()))
+                    deny(arrayOf(SABMessages.General.error.replaceVariables().translate().convert()))
                 }
             }
         }.catch {
             SpicyAzisaBan.LOGGER.warning("Could not check punishments for ${connection.uniqueId}")
             it.printStackTrace()
             if (SABConfig.database.failsafe) {
-                deny(Component.fromLegacyText(SABMessages.General.errorDetailed.replaceVariables(
+                deny(arrayOf(SABMessages.General.errorDetailed.replaceVariables(
                     "EXCEPTION_CLASS_NAME" to it.javaClass.name,
                     "EXCEPTION_MESSAGE" to (it.message ?: "null"),
-                ).translate()))
+                ).translate().convert()))
             }
         }.complete()
     }
@@ -139,7 +141,7 @@ object PunishmentChecker {
                 SpicyAzisaBan.debug("Kicking ${player.name} from ${player.getServer()?.name} asynchronously (reason: banned from ${p.server}; cached)")
                 cancel()
                 if (currentServer == null || player.getServer() == null) {
-                    player.kick(p.getBannedMessage().complete())
+                    player.disconnect(p.getBannedMessage().complete())
                 } else {
                     player.sendDelayed(100, p.getBannedMessage().complete())
                 }
@@ -159,7 +161,7 @@ object PunishmentChecker {
                     SpicyAzisaBan.debug(p.toString(), 2)
                     cancel()
                     if (currentServer == null || player.getServer() == null) {
-                        player.kick(p.getBannedMessage().complete())
+                        player.disconnect(p.getBannedMessage().complete())
                     } else if (player.getServer() != currentServer) {
                         player.plsConnect(currentServer, target)
                         player.sendDelayed(2000, p.getBannedMessage().complete())
@@ -178,7 +180,7 @@ object PunishmentChecker {
                 SpicyAzisaBan.LOGGER.warning("Could not check punishments for ${player.uniqueId} (Timed out, > 1500 ms)")
                 if (SABConfig.database.failsafe) {
                     cancel()
-                    player.kick(SABMessages.General.error.replaceVariables().translate())
+                    player.disconnect(SABMessages.General.error.replaceVariables().translate())
                 }
             }
         }.catch {
@@ -186,7 +188,7 @@ object PunishmentChecker {
             it.printStackTrace()
             if (SABConfig.database.failsafe) {
                 cancel()
-                player.kick(SABMessages.General.errorDetailed.replaceVariables(
+                player.disconnect(SABMessages.General.errorDetailed.replaceVariables(
                     "EXCEPTION_CLASS_NAME" to it.javaClass.name,
                     "EXCEPTION_MESSAGE" to (it.message ?: "null"),
                 ).translate())
@@ -194,7 +196,7 @@ object PunishmentChecker {
         }.then {}
     }
 
-    fun checkMute(actor: Actor, message: String, cancel: (reason: String) -> Unit) {
+    fun checkMute(actor: Actor, message: String, cancel: (reason: net.kyori.adventure.text.Component) -> Unit) {
         if (actor !is PlayerActor) return
         val isCommand = message.startsWith("/")
         if (isCommand &&

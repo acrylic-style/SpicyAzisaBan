@@ -17,6 +17,7 @@ import net.azisaba.spicyAzisaBan.util.Util.getServerName
 import net.azisaba.spicyAzisaBan.util.Util.getServerOrGroupName
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.util.Util.sendErrorMessage
+import net.azisaba.spicyAzisaBan.util.Util.toLegacySectionText
 import net.azisaba.spicyAzisaBan.util.Util.translate
 import net.azisaba.spicyAzisaBan.util.contexts.Contexts
 import net.azisaba.spicyAzisaBan.util.contexts.PlayerContext
@@ -88,7 +89,8 @@ object WarningCommand: Command() {
                             "original_reason" to reason.text,
                             "time" to ReloadableSABConfig.BanOnWarning.time,
                         )
-                        .translate())
+                        .translate()
+                        .toLegacySectionText())
                 val timeContext = parsed.get(Contexts.TIME, actor).complete().apply {
                     if (!isSuccess) {
                         SpicyAzisaBan.LOGGER.severe("Failed to parse time: ${ReloadableSABConfig.BanOnWarning.time}")

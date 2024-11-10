@@ -51,6 +51,7 @@ import net.azisaba.spicyAzisaBan.sql.migrations.DatabaseMigration
 import net.azisaba.spicyAzisaBan.struct.EventType
 import net.azisaba.spicyAzisaBan.util.TimerTasks
 import net.azisaba.spicyAzisaBan.util.Util
+import net.azisaba.spicyAzisaBan.util.Util.toLegacySectionText
 import net.azisaba.spicyAzisaBan.util.Util.translate
 import util.promise.rewrite.Promise
 import xyz.acrylicstyle.sql.options.FindOptions
@@ -105,7 +106,7 @@ abstract class SpicyAzisaBan {
         if (wasInitialized) error("Cannot construct SpicyAzisaBan more than once")
         wasInitialized = true
         instance = this
-        PREFIX = SABMessages.General.prefix.translate()
+        PREFIX = SABMessages.General.prefix.translate().toLegacySectionText()
     }
 
     private fun initDatabase() {
@@ -220,6 +221,7 @@ abstract class SpicyAzisaBan {
     abstract fun executeCommand(actor: Actor, command: String)
     abstract fun getConsoleActor(): Actor
     abstract fun getDataFolder(): Path
+    abstract fun convertComponent(component: net.kyori.adventure.text.Component): Component
 
     class Settings {
 

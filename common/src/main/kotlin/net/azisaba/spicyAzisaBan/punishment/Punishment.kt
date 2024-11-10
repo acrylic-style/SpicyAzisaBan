@@ -8,7 +8,6 @@ import net.azisaba.spicyAzisaBan.SpicyAzisaBan
 import net.azisaba.spicyAzisaBan.common.Actor
 import net.azisaba.spicyAzisaBan.common.ChatColor
 import net.azisaba.spicyAzisaBan.common.PlayerActor
-import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.common.title.Title
 import net.azisaba.spicyAzisaBan.punishment.Punishment.Flags.Companion.toDatabase
 import net.azisaba.spicyAzisaBan.sql.SQLConnection
@@ -18,13 +17,13 @@ import net.azisaba.spicyAzisaBan.util.Util
 import net.azisaba.spicyAzisaBan.util.Util.async
 import net.azisaba.spicyAzisaBan.util.Util.broadcastMessageAfterRandomTime
 import net.azisaba.spicyAzisaBan.util.Util.connectToLobbyOrKick
+import net.azisaba.spicyAzisaBan.util.Util.convert
 import net.azisaba.spicyAzisaBan.util.Util.getIPAddress
 import net.azisaba.spicyAzisaBan.util.Util.getProfile
 import net.azisaba.spicyAzisaBan.util.Util.getServerName
 import net.azisaba.spicyAzisaBan.util.Util.hasNotifyPermissionOf
 import net.azisaba.spicyAzisaBan.util.Util.isNotExpired
 import net.azisaba.spicyAzisaBan.util.Util.isPunishableIP
-import net.azisaba.spicyAzisaBan.util.Util.kick
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.util.Util.toMinecraft
 import net.azisaba.spicyAzisaBan.util.Util.translate
@@ -253,8 +252,8 @@ data class Punishment(
             SABMessages.Commands.Warning.subtitle
         }
         val title = Title(
-            Component.fromLegacyText(rawTitle.replaceVariables().translate()),
-            Component.fromLegacyText(rawSubTitle.replaceVariables().translate()),
+            arrayOf(rawTitle.replaceVariables().translate().convert()),
+            arrayOf(rawSubTitle.replaceVariables().translate().convert()),
             0,
             (SABConfig.Warning.titleStayTime / 50L).toInt(),
             0,
@@ -325,32 +324,32 @@ data class Punishment(
             )
         }
 
-    fun getBannedMessage(): Promise<String> =
+    fun getBannedMessage(): Promise<net.kyori.adventure.text.Component> =
         getVariables()
             .then { variables ->
                 var layout = when (type) {
-                    PunishmentType.BAN -> SABMessages.Commands.Ban.layout.replaceVariables(variables).translate()
-                    PunishmentType.TEMP_BAN -> SABMessages.Commands.TempBan.layout.replaceVariables(variables).translate()
-                    PunishmentType.IP_BAN -> SABMessages.Commands.IPBan.layout.replaceVariables(variables).translate()
-                    PunishmentType.TEMP_IP_BAN -> SABMessages.Commands.TempIPBan.layout.replaceVariables(variables).translate()
-                    PunishmentType.MUTE -> SABMessages.Commands.Mute.layout2.replaceVariables(variables).translate()
-                    PunishmentType.TEMP_MUTE -> SABMessages.Commands.TempMute.layout2.replaceVariables(variables).translate()
-                    PunishmentType.IP_MUTE -> SABMessages.Commands.IPMute.layout2.replaceVariables(variables).translate()
-                    PunishmentType.TEMP_IP_MUTE -> SABMessages.Commands.TempIPMute.layout2.replaceVariables(variables).translate()
-                    PunishmentType.WARNING -> SABMessages.Commands.Warning.layout.replaceVariables(variables).translate()
-                    PunishmentType.CAUTION -> SABMessages.Commands.Caution.layout.replaceVariables(variables).translate()
-                    PunishmentType.KICK -> SABMessages.Commands.Kick.layout.replaceVariables(variables).translate()
+                    PunishmentType.BAN -> SABMessages.Commands.Ban.layout.replaceVariables(variables)
+                    PunishmentType.TEMP_BAN -> SABMessages.Commands.TempBan.layout.replaceVariables(variables)
+                    PunishmentType.IP_BAN -> SABMessages.Commands.IPBan.layout.replaceVariables(variables)
+                    PunishmentType.TEMP_IP_BAN -> SABMessages.Commands.TempIPBan.layout.replaceVariables(variables)
+                    PunishmentType.MUTE -> SABMessages.Commands.Mute.layout2.replaceVariables(variables)
+                    PunishmentType.TEMP_MUTE -> SABMessages.Commands.TempMute.layout2.replaceVariables(variables)
+                    PunishmentType.IP_MUTE -> SABMessages.Commands.IPMute.layout2.replaceVariables(variables)
+                    PunishmentType.TEMP_IP_MUTE -> SABMessages.Commands.TempIPMute.layout2.replaceVariables(variables)
+                    PunishmentType.WARNING -> SABMessages.Commands.Warning.layout.replaceVariables(variables)
+                    PunishmentType.CAUTION -> SABMessages.Commands.Caution.layout.replaceVariables(variables)
+                    PunishmentType.KICK -> SABMessages.Commands.Kick.layout.replaceVariables(variables)
                     else -> throw AssertionError("Cannot get layout for $type")
                 }
                 val proofs = this.getPublicProofs().complete()
                 if (proofs.isNotEmpty()) {
                     layout += "\n\n"
-                    layout += SABMessages.Commands.General.viewableProofs.replaceVariables(variables).translate() + "\n"
+                    layout += SABMessages.Commands.General.viewableProofs.replaceVariables(variables) + "\n"
                     layout += proofs.joinToString("\n") { proof ->
-                        SABMessages.Commands.General.proofEntry.replaceVariables(proof.variables).translate()
+                        SABMessages.Commands.General.proofEntry.replaceVariables(proof.variables)
                     }
                 }
-                return@then layout
+                return@then layout.translate()
             }
             .catch {
                 SpicyAzisaBan.LOGGER.warning("Could not fetch player name of $operator")
@@ -411,7 +410,7 @@ data class Punishment(
         if (!type.isIPBased()) {
             val player = SpicyAzisaBan.instance.getPlayer(getTargetUUID()) ?: return@async it.resolve()
             if (type == PunishmentType.BAN || type == PunishmentType.TEMP_BAN) {
-                player.connectToLobbyOrKick(server, Component.fromLegacyText(getBannedMessage().complete())).complete()
+                player.connectToLobbyOrKick(server, arrayOf(getBannedMessage().complete().convert())).complete()
                 SpicyAzisaBan.instance.getServers()[notifyTargetServer]?.broadcastMessageAfterRandomTime()
             } else if (type == PunishmentType.WARNING || type == PunishmentType.CAUTION) {
                 sendTitle()
@@ -421,7 +420,7 @@ data class Punishment(
                 player.send(SABMessages.Commands.TempMute.layout1.replaceVariables(getVariables().complete()).translate())
             } else if (type == PunishmentType.KICK) {
                 if (server == "global") {
-                    player.kick(getBannedMessage().complete())
+                    player.disconnect(getBannedMessage().complete())
                 } else {
                     val list = SpicyAzisaBan.instance.connection.getServersByGroup(server).complete()
                     if (list.isEmpty()) {
@@ -435,7 +434,7 @@ data class Punishment(
                         .filter { it.name.startsWith("lobby") }
                         .randomOrNull()
                     if (lobby == null) {
-                        player.kick(getBannedMessage().complete())
+                        player.disconnect(getBannedMessage().complete())
                         return@async it.resolve()
                     }
                     player.connect(lobby)
@@ -445,10 +444,10 @@ data class Punishment(
         } else {
             val players = SpicyAzisaBan.instance.getPlayers().filter { it.getIPAddress() == target }
             if (type == PunishmentType.IP_BAN || type == PunishmentType.TEMP_IP_BAN) {
-                val message = Component.fromLegacyText(getBannedMessage().complete())
+                val message = getBannedMessage().complete().convert()
                 players.apply {
                     forEach { player ->
-                        player.connectToLobbyOrKick(server, message)
+                        player.connectToLobbyOrKick(server, arrayOf(message))
                     }
                     if (isNotEmpty()) {
                         SpicyAzisaBan.instance.getServers()[notifyTargetServer]?.broadcastMessageAfterRandomTime()
@@ -546,7 +545,7 @@ data class Punishment(
                 if (p.type.isBan()) {
                     if (canJoinServer(pd.uuid, null, server).complete() != null) {
                         // kick the player
-                        p.getBannedMessage().thenDo { SpicyAzisaBan.instance.getPlayer(pd.uuid)?.kick(it) }
+                        p.getBannedMessage().thenDo { SpicyAzisaBan.instance.getPlayer(pd.uuid)?.disconnect(it) }
                     }
                 } else {
                     // send the message
@@ -569,17 +568,17 @@ data class Punishment(
         list.sendWebhook()
     }
 
-    fun getHistoryMessage(): Promise<String> = async { context ->
+    fun getHistoryMessage(): Promise<net.kyori.adventure.text.Component> = async { context ->
         val unpunish: UnPunish? = SpicyAzisaBan.instance.connection.unpunish
             .findOne(FindOptions.Builder().addWhere("punish_id", this.id).setLimit(1).build())
             .then { it?.let { UnPunish.fromTableData(this, it) } }
             .complete()
-        val strikethroughIfUnpunished = if (unpunish == null) "" else "${ChatColor.STRIKETHROUGH}"
-        val unpunishReason = if (unpunish == null) "" else SABMessages.Commands.History.unpunishReason.replaceVariables("reason" to unpunish.reason).translate()
-        val unpunishId = if (unpunish == null) "" else SABMessages.Commands.History.unpunishId.replaceVariables("id" to unpunish.id.toString()).translate()
+        val strikethroughIfUnpunished = if (unpunish == null) "" else "<strikethrough>"
+        val unpunishReason = if (unpunish == null) "" else SABMessages.Commands.History.unpunishReason.replaceVariables("reason" to unpunish.reason)
+        val unpunishId = if (unpunish == null) "" else SABMessages.Commands.History.unpunishId.replaceVariables("id" to unpunish.id.toString())
         val unpunishOperator = if (unpunish == null) "" else {
             val opName = unpunish.operator.getProfile().catch {}.complete()?.name ?: "Unknown"
-            SABMessages.Commands.History.unpunishOperator.replaceVariables("operator" to opName).translate()
+            SABMessages.Commands.History.unpunishOperator.replaceVariables("operator" to opName)
         }
         context.resolve(
             SABMessages.Commands.History.layout.replaceVariables()

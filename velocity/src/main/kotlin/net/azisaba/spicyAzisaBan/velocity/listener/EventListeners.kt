@@ -12,7 +12,6 @@ import com.velocitypowered.api.proxy.Player
 import net.azisaba.spicyAzisaBan.common.ServerInfo
 import net.azisaba.spicyAzisaBan.punishment.PunishmentChecker
 import net.azisaba.spicyAzisaBan.struct.PlayerData
-import net.azisaba.spicyAzisaBan.util.Util.disconnect
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.velocity.VelocityPlayerActor
 import net.azisaba.spicyAzisaBan.velocity.util.VelocityUtil.toVelocity

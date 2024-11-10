@@ -76,4 +76,6 @@ class SpicyAzisaBanVelocity(private val server: ProxyServer): SpicyAzisaBan() {
     override fun getConsoleActor(): Actor = VelocityActor(server.consoleCommandSource)
 
     override fun getDataFolder(): Path = File("./plugins/SpicyAzisaBan").toPath()
+
+    override fun convertComponent(component: KComponent): Component = VelocityComponent(component)
 }

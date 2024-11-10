@@ -5,7 +5,6 @@ import net.azisaba.spicyAzisaBan.SABMessages
 import net.azisaba.spicyAzisaBan.SABMessages.replaceVariables
 import net.azisaba.spicyAzisaBan.SpicyAzisaBan
 import net.azisaba.spicyAzisaBan.common.Actor
-import net.azisaba.spicyAzisaBan.common.ChatColor
 import net.azisaba.spicyAzisaBan.common.command.Command
 import net.azisaba.spicyAzisaBan.struct.PlayerData
 import net.azisaba.spicyAzisaBan.util.Util
@@ -17,6 +16,7 @@ import net.azisaba.spicyAzisaBan.util.Util.isValidIPAddress
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.util.Util.sendErrorMessage
 import net.azisaba.spicyAzisaBan.util.Util.sendOrSuppressErrorMessage
+import net.azisaba.spicyAzisaBan.util.Util.toMiniMessage
 import net.azisaba.spicyAzisaBan.util.Util.toUUIDOrNull
 import net.azisaba.spicyAzisaBan.util.Util.translate
 import util.kt.promise.rewrite.catch
@@ -82,10 +82,10 @@ object SeenCommand: Command() {
                 val ipd = pd.ip
                     ?.let { PlayerData.getAllByIP(it).catch { e -> actor.sendErrorMessage(e) }.complete() }
                     ?.filter { pd2 -> pd2.uniqueId != pd.uniqueId }
-                val iPlayers = ipd?.joinToString("${ChatColor.WHITE}, ${ChatColor.GOLD}") {
+                val iPlayers = ipd?.joinToString("<white>, <gold>") {
                     var prefix = ""
-                    if (SpicyAzisaBan.instance.getPlayer(it.uniqueId)?.isOnline() == true) prefix += "${ChatColor.GREEN}"
-                    var suffix = "${ChatColor.GOLD}"
+                    if (SpicyAzisaBan.instance.getPlayer(it.uniqueId)?.isOnline() == true) prefix += "<green>"
+                    var suffix = "<gold>"
                     if (it.ip != pd.ip) suffix += "*"
                     "$prefix${it.name}$suffix"
                 }.toString()
@@ -95,7 +95,7 @@ object SeenCommand: Command() {
                             "player" to pd.name,
                             "uuid" to pd.uuid.toString(),
                             "since" to since,
-                            "status" to status,
+                            "status" to status.toMiniMessage(),
                             "ip" to pd.ip.toString(),
                             "hostname" to pd.ip?.let { InetAddress.getByName(pd.ip).hostName }.toString(),
                             "name_history" to pd.getUsernameHistory().complete().distinct().joinToString(", "),

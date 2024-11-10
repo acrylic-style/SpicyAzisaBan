@@ -5,7 +5,6 @@ import net.azisaba.spicyAzisaBan.SABMessages
 import net.azisaba.spicyAzisaBan.SABMessages.replaceVariables
 import net.azisaba.spicyAzisaBan.SpicyAzisaBan
 import net.azisaba.spicyAzisaBan.common.Actor
-import net.azisaba.spicyAzisaBan.common.ChatColor
 import net.azisaba.spicyAzisaBan.common.command.Command
 import net.azisaba.spicyAzisaBan.punishment.Punishment
 import net.azisaba.spicyAzisaBan.punishment.PunishmentType
@@ -15,9 +14,9 @@ import net.azisaba.spicyAzisaBan.util.Util.async
 import net.azisaba.spicyAzisaBan.util.Util.filterArgKeys
 import net.azisaba.spicyAzisaBan.util.Util.filtr
 import net.azisaba.spicyAzisaBan.util.Util.isValidIPAddress
-import net.azisaba.spicyAzisaBan.util.Util.plus
 import net.azisaba.spicyAzisaBan.util.Util.send
 import net.azisaba.spicyAzisaBan.util.Util.sendErrorMessage
+import net.azisaba.spicyAzisaBan.util.Util.toMiniMessage
 import net.azisaba.spicyAzisaBan.util.Util.translate
 import net.azisaba.spicyAzisaBan.util.contexts.Contexts
 import net.azisaba.spicyAzisaBan.util.contexts.IPAddressContext
@@ -51,7 +50,7 @@ object CheckCommand: Command() {
         if (pid != null) {
             Punishment.fetchPunishmentById(pid).thenDo { p ->
                 if (p == null) {
-                    return@thenDo actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().translate().format(pid))
+                    return@thenDo actor.send(SABMessages.Commands.General.punishmentNotFound.replaceVariables().format(pid).translate())
                 }
                 actor.send(p.getHistoryMessage().complete())
             }
@@ -141,14 +140,14 @@ object CheckCommand: Command() {
                         .replaceVariables(
                             "ip" to ip,
                             "hostname" to InetAddress.getByName(ip).hostName,
-                            "mute_count" to (if (muteCount == 0) ChatColor.GREEN else ChatColor.RED) + muteCount.toString(),
-                            "ban_count" to (if (banCount == 0) ChatColor.GREEN else ChatColor.RED) + banCount.toString(),
-                            "warning_count" to (if (warningCount == 0) ChatColor.GREEN else ChatColor.RED) + warningCount.toString(),
-                            "caution_count" to (if (cautionCount == 0) ChatColor.GREEN else ChatColor.RED) + cautionCount.toString(),
+                            "mute_count" to (if (muteCount == 0) "<green>" else "<red>") + muteCount.toString(),
+                            "ban_count" to (if (banCount == 0) "<green>" else "<red>") + banCount.toString(),
+                            "warning_count" to (if (warningCount == 0) "<green>" else "<red>") + warningCount.toString(),
+                            "caution_count" to (if (cautionCount == 0) "<green>" else "<red>") + cautionCount.toString(),
                             "kick_count" to kickCount.toString(),
                             "note_count" to noteCount.toString(),
-                            "ban_info" to banInfo,
-                            "mute_info" to muteInfo,
+                            "ban_info" to banInfo.toMiniMessage(),
+                            "mute_info" to muteInfo.toMiniMessage(),
                         )
                         .translate()
                 )
@@ -211,14 +210,14 @@ object CheckCommand: Command() {
                             "uuid" to pd.uniqueId.toString(),
                             "ip" to pd.ip.toString(),
                             "hostname" to pd.ip?.let { InetAddress.getByName(it).hostName }.toString(),
-                            "mute_count" to (if (muteCount == 0) ChatColor.GREEN else ChatColor.RED) + muteCount.toString(),
-                            "ban_count" to (if (banCount == 0) ChatColor.GREEN else ChatColor.RED) + banCount.toString(),
-                            "warning_count" to (if (warningCount == 0) ChatColor.GREEN else ChatColor.RED) + warningCount.toString(),
-                            "caution_count" to (if (cautionCount == 0) ChatColor.GREEN else ChatColor.RED) + cautionCount.toString(),
+                            "mute_count" to (if (muteCount == 0) "<green>" else "<red>") + muteCount.toString(),
+                            "ban_count" to (if (banCount == 0) "<green>" else "<red>") + banCount.toString(),
+                            "warning_count" to (if (warningCount == 0) "<green>" else "<red>") + warningCount.toString(),
+                            "caution_count" to (if (cautionCount == 0) "<green>" else "<red>") + cautionCount.toString(),
                             "kick_count" to kickCount.toString(),
                             "note_count" to noteCount.toString(),
-                            "ban_info" to banInfo,
-                            "mute_info" to muteInfo,
+                            "ban_info" to banInfo.toMiniMessage(),
+                            "mute_info" to muteInfo.toMiniMessage(),
                         )
                         .translate()
                 )

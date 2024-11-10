@@ -1,5 +1,6 @@
 package net.azisaba.spicyAzisaBan.common
 
+import net.azisaba.spicyAzisaBan.SpicyAzisaBan
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import java.util.UUID
 
@@ -9,6 +10,9 @@ interface Actor {
     fun sendMessage(component: Component)
     fun sendMessage(vararg components: Component)
     fun hasPermission(permission: String): Boolean
+
+    fun sendMessage(component: net.kyori.adventure.text.Component) =
+        sendMessage(SpicyAzisaBan.instance.convertComponent(component))
 
     object Dummy : Actor {
         override val name = "dummy player"

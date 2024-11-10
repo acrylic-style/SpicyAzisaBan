@@ -10,6 +10,7 @@ import net.azisaba.spicyAzisaBan.common.ServerInfo
 import net.azisaba.spicyAzisaBan.common.chat.Component
 import net.azisaba.spicyAzisaBan.common.command.Command
 import net.azisaba.spicyAzisaBan.common.scheduler.ScheduledTask
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import java.io.File
 import java.io.OutputStream
 import java.nio.file.Path
@@ -66,4 +67,12 @@ class SpicyAzisaBanCLI: SpicyAzisaBan() {
     override fun executeCommand(actor: Actor, command: String) = throw AssertionError("Cannot execute command on CLI")
     override fun getConsoleActor(): Actor = CLIActor
     override fun getDataFolder(): Path = File(".").toPath()
+
+    override fun convertComponent(component: net.kyori.adventure.text.Component): Component {
+        return LegacyComponentSerializer.builder()
+            .character('§')
+            .build()
+            .serialize(component)
+            .let { SimpleComponent.fromLegacyText(it) }
+    }
 }

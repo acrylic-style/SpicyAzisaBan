@@ -1,7 +1,7 @@
 package net.azisaba.spicyAzisaBan
 
-import net.azisaba.spicyAzisaBan.common.ChatColor
 import net.azisaba.spicyAzisaBan.util.Util
+import net.azisaba.spicyAzisaBan.util.Util.toLegacySectionText
 import net.azisaba.spicyAzisaBan.util.Util.translate
 import util.yaml.YamlConfiguration
 import util.yaml.YamlObject
@@ -35,14 +35,14 @@ object SABMessages {
     fun YamlObject.getMessage(key: String, def: String = "<key: $key>"): String {
         val raw = this.rawData[key] ?: def
         if (raw is String) return raw
-        return this.getArray(key)?.mapNotNull { o -> o?.toString() }?.joinToString("${ChatColor.RESET}\n") ?: def
+        return this.getArray(key)?.mapNotNull { o -> o?.toString() }?.joinToString("<reset>\n") ?: def
     }
 
     /**
      * Replaces the variables (%KEY_IN_UPPERCASE%) in string with value.
      */
     fun String.replaceVariables(variables: Map<String, String> = mapOf()): String {
-        var s = replace("%PREFIX%", SpicyAzisaBan.PREFIX)
+        var s = replace("%PREFIX%", General.prefix)
             .replace("%CMD_PREFIX%", SABConfig.prefix)
         variables.forEach { (key, value) -> s = s.replace("%${key.uppercase()}%", value) }
         return s
@@ -79,6 +79,7 @@ object SABMessages {
                 "millis" to Util.zero(3, c[Calendar.MILLISECOND]),
             )
             .translate()
+            .toLegacySectionText()
     }
 
     object General {
