@@ -20,7 +20,7 @@ import java.sql.SQLNonTransientConnectionException
 import java.sql.Statement
 import java.util.Properties
 
-class SQLConnection(host: String, name: String, user:String, password: String): Sequelize(host, name, user, password) {
+class SQLConnection(host: String, name: String, user:String, password: String): Sequelize("jdbc:mariadb://$host/$name", user, password) {
     companion object {
         const val CURRENT_DATABASE_VERSION = 9
 
