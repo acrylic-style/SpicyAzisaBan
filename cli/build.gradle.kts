@@ -8,12 +8,6 @@ dependencies {
 }
 
 tasks {
-    compileKotlin {
-        kotlinOptions {
-            freeCompilerArgs = listOf("-opt-in=kotlin.RequiresOptIn")
-        }
-    }
-
     shadowJar {
         manifest {
             attributes(
