@@ -1,12 +1,14 @@
 # SpicyAzisaBan
 
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Frepo.azisaba.net%2Frepository%2Fmaven-public%2Fnet%2Fazisaba%2Fspicyazisaban%2Fcommon%2Fmaven-metadata.xml)](https://repo.azisaba.net/#browse/browse:maven-public:net%2Fazisaba%2Fspicyazisaban%2Fcommon)
+
 ## Publishing to local maven repository
 `./gradlew publishToMavenLocal`
 
 ## Building (to run the plugin)
 `./gradlew shadowJar`
 
-## Permissions (probably)
+## Non-exhaustive list of permissions
 - `sab.command.spicyazisaban`
 - `sab.command.spicyazisaban.creategroup`
 - `sab.command.spicyazisaban.deletegroup`

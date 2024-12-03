@@ -6,7 +6,6 @@ import net.azisaba.spicyAzisaBan.SABMessages
 import net.azisaba.spicyAzisaBan.SABMessages.replaceVariables
 import net.azisaba.spicyAzisaBan.SpicyAzisaBan
 import net.azisaba.spicyAzisaBan.common.Actor
-import net.azisaba.spicyAzisaBan.common.ChatColor
 import net.azisaba.spicyAzisaBan.common.PlayerActor
 import net.azisaba.spicyAzisaBan.common.title.Title
 import net.azisaba.spicyAzisaBan.punishment.Punishment.Flags.Companion.toDatabase
@@ -557,7 +556,7 @@ data class Punishment(
     }.thenDo { list ->
         val message = SABMessages.Commands.General.samePunishmentAppliedToSameIPAddress
             .replaceVariables(
-                "players" to "${ChatColor.RED}${list.joinToString("${ChatColor.YELLOW}, ${ChatColor.RED}") { it.name }}",
+                "players" to "<red>${list.joinToString("<yellow>, <red>") { it.name }}",
                 "players_count" to list.size.toString(),
             )
             .translate()

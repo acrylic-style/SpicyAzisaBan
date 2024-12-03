@@ -41,15 +41,15 @@ object NameHistoryCommand : Command() {
                     names.mapIndexed { i, s ->
                         val isLast = names.lastIndex == i
                         if (pair.first.contains(s)) {
-                            "§${if (isLast) 'a' else 'b'}§n$s§r"
+                            "${if (isLast) "<green>" else "<aqua>"}<underlined>$s<reset>"
                         } else {
                             if (isLast) {
-                                "§a$s"
+                                "<green>$s"
                             } else {
-                                "§e$s"
+                                "<yellow>$s"
                             }
                         }
-                    }.joinToString("§7 -> ").let { actor.send(it) }
+                    }.joinToString("<gray> -> ").let { actor.send(it) }
                 }
             }
             .catch { actor.sendErrorMessage(it) }
