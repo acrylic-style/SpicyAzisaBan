@@ -18,7 +18,7 @@ database:
   user: spicyazisaban
   password: naetao
   verifyServerCertificate: false
-  useSSL: true
+  useSSL: false
   # If true, the plugin will prevent players from joining the server if database is inaccessible.
   failsafe: true
 
