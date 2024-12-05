@@ -21,7 +21,7 @@ object WarnsCommand: Command() {
     override val permission = "sab.warns" // this should be set to true for everyone
 
     override fun execute(actor: Actor, args: Array<String>) {
-        if (actor !is PlayerActor) return actor.send("e^1")
+        if (actor !is PlayerActor) return
         if (!actor.hasPermission(permission)) {
             return actor.send(SABMessages.General.missingPermissions.replaceVariables().translate())
         }

@@ -24,7 +24,7 @@ object WebhookUtil {
             val webhook = DiscordWebhook(url)
             return operator.getProfile().then { profile ->
                 webhook.username = profile.name
-                webhook.content = "処罰が追加されました。"
+                webhook.content = SABMessages.General.Webhook.punishmentAdded
                 webhook.addEmbed(toEmbed(profile))
                 webhook.execute()
             }.then {}.catch { it.printStackTrace() }
@@ -44,7 +44,7 @@ object WebhookUtil {
                 split.forEachIndexed { index, list ->
                     val webhook = DiscordWebhook(url)
                     webhook.username = profile.name
-                    webhook.content = "処罰が追加されました。"
+                    webhook.content = SABMessages.General.Webhook.punishmentAdded
                     list.forEach { p ->
                         webhook.addEmbed(p.toEmbed(profile))
                     }
@@ -58,16 +58,16 @@ object WebhookUtil {
     private fun Punishment.toEmbed(operator: PlayerProfile): DiscordWebhook.EmbedObject {
         val embed = DiscordWebhook.EmbedObject()
         embed.color = Color.RED
-        embed.addField("種類", "${type.getName()} (${type.name})", false)
-        embed.addField("処罰執行者", "${operator.name} (${operator.uniqueId})", false)
-        embed.addField("対象サーバー", server, false)
-        embed.addField("被処罰者", "$name ($target)", false)
-        embed.addField("理由", reason, false)
-        embed.addField("ID", id.toString(), false)
-        embed.addField("処罰日時", SABMessages.formatDate(start), false)
+        embed.addField(SABMessages.General.Webhook.type, "${type.getName()} (${type.name})", false)
+        embed.addField(SABMessages.General.Webhook.operator, "${operator.name} (${operator.uniqueId})", false)
+        embed.addField(SABMessages.General.Webhook.server, server, false)
+        embed.addField(SABMessages.General.Webhook.target, "$name ($target)", false)
+        embed.addField(SABMessages.General.Webhook.punishReason, reason, false)
+        embed.addField(SABMessages.General.Webhook.punishmentId, id.toString(), false)
+        embed.addField(SABMessages.General.Webhook.punishmentDateTime, SABMessages.formatDate(start), false)
         if (type.name.contains("TEMP")) {
-            embed.addField("期間", Util.unProcessTime(end.serializeAsLong() - start), false)
-            embed.addField("期限", if (end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(end.serializeAsLong()), false)
+            embed.addField(SABMessages.General.Webhook.duration, Util.unProcessTime(end.serializeAsLong() - start), false)
+            embed.addField(SABMessages.General.Webhook.expiration, if (end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(end.serializeAsLong()), false)
         }
         return embed
     }
@@ -78,20 +78,20 @@ object WebhookUtil {
             val webhook = DiscordWebhook(url)
             return async<Unit> { context ->
                 webhook.username = actor.name
-                webhook.content = "処罰理由が変更されました。"
+                webhook.content = SABMessages.General.Webhook.punishmentReasonChanged
                 val embed = DiscordWebhook.EmbedObject()
                 embed.color = Color.ORANGE
-                embed.addField("種類", "${type.getName()} (${type.name})", false)
-                embed.addField("コマンド実行者", "${actor.name} (${actor.uniqueId})", false)
-                embed.addField("対象サーバー", server, false)
-                embed.addField("被処罰者", "$name ($target)", false)
-                embed.addField("新しい理由", newReason, false)
-                embed.addField("元の理由", reason, false)
-                embed.addField("ID", id.toString(), false)
-                embed.addField("処罰日時", SABMessages.formatDate(start), false)
+                embed.addField(SABMessages.General.Webhook.type, "${type.getName()} (${type.name})", false)
+                embed.addField(SABMessages.General.Webhook.operator, "${actor.name} (${actor.uniqueId})", false)
+                embed.addField(SABMessages.General.Webhook.server, server, false)
+                embed.addField(SABMessages.General.Webhook.target, "$name ($target)", false)
+                embed.addField(SABMessages.General.Webhook.newReason, newReason, false)
+                embed.addField(SABMessages.General.Webhook.oldReason, reason, false)
+                embed.addField(SABMessages.General.Webhook.punishmentId, id.toString(), false)
+                embed.addField(SABMessages.General.Webhook.punishmentDateTime, SABMessages.formatDate(start), false)
                 if (type.name.contains("TEMP")) {
-                    embed.addField("期間", Util.unProcessTime(end.serializeAsLong() - start), false)
-                    embed.addField("期限", if (end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(end.serializeAsLong()), false)
+                    embed.addField(SABMessages.General.Webhook.duration, Util.unProcessTime(end.serializeAsLong() - start), false)
+                    embed.addField(SABMessages.General.Webhook.expiration, if (end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(end.serializeAsLong()), false)
                 }
                 webhook.addEmbed(embed)
                 try {
@@ -112,22 +112,22 @@ object WebhookUtil {
             return punishment.operator.getProfile().then { profile ->
                 val unPunishOpProfile = operator.getProfile().complete()
                 webhook.username = unPunishOpProfile.name
-                webhook.content = "処罰が解除されました。"
+                webhook.content = SABMessages.General.Webhook.punishmentRemoved
                 val embed = DiscordWebhook.EmbedObject()
                 embed.color = Color.GREEN
-                embed.addField("種類", "${punishment.type.getName()} (${punishment.type.name})", false)
-                embed.addField("対象サーバー", punishment.server, false)
-                embed.addField("処罰解除者", "${unPunishOpProfile.name} (${unPunishOpProfile.uniqueId})", false)
-                embed.addField("解除理由", reason, false)
-                embed.addField("解除ID", id.toString(), false)
-                embed.addField("処罰執行者", "${profile.name} (${profile.uniqueId})", false)
-                embed.addField("被処罰者", "${punishment.name} (${punishment.target})", false)
-                embed.addField("処罰理由", punishment.reason, false)
-                embed.addField("処罰ID", punishment.id.toString(), false)
-                embed.addField("処罰日時", SABMessages.formatDate(punishment.start), false)
+                embed.addField(SABMessages.General.Webhook.type, "${punishment.type.getName()} (${punishment.type.name})", false)
+                embed.addField(SABMessages.General.Webhook.server, punishment.server, false)
+                embed.addField(SABMessages.General.Webhook.operator, "${unPunishOpProfile.name} (${unPunishOpProfile.uniqueId})", false)
+                embed.addField(SABMessages.General.Webhook.unpunishReason, reason, false)
+                embed.addField(SABMessages.General.Webhook.unpunishId, id.toString(), false)
+                embed.addField(SABMessages.General.Webhook.punishOperator, "${profile.name} (${profile.uniqueId})", false)
+                embed.addField(SABMessages.General.Webhook.target, "${punishment.name} (${punishment.target})", false)
+                embed.addField(SABMessages.General.Webhook.punishReason, punishment.reason, false)
+                embed.addField(SABMessages.General.Webhook.punishmentId, punishment.id.toString(), false)
+                embed.addField(SABMessages.General.Webhook.punishmentDateTime, SABMessages.formatDate(punishment.start), false)
                 if (punishment.type.name.contains("TEMP")) {
-                    embed.addField("期間", Util.unProcessTime(punishment.end.serializeAsLong() - punishment.start), false)
-                    embed.addField("期限", if (punishment.end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(punishment.end.serializeAsLong()), false)
+                    embed.addField(SABMessages.General.Webhook.duration, Util.unProcessTime(punishment.end.serializeAsLong() - punishment.start), false)
+                    embed.addField(SABMessages.General.Webhook.expiration, if (punishment.end is Expiration.NeverExpire) SABMessages.General.permanent else SABMessages.formatDate(punishment.end.serializeAsLong()), false)
                 }
                 webhook.addEmbed(embed)
                 webhook.execute()
@@ -145,15 +145,15 @@ object WebhookUtil {
                 webhook.content = content
                 val embed = DiscordWebhook.EmbedObject()
                 embed.color = color
-                embed.addField("種類", "${punishment.type.getName()} (${punishment.type.name})", false)
-                embed.addField("コマンド実行者", "${actor.name} (${actor.uniqueId})", false)
-                embed.addField("対象サーバー", punishment.server, false)
-                embed.addField("証拠テキスト", text, false)
-                embed.addField("証拠ID", id.toString(), false)
-                embed.addField("被処罰者", "${punishment.name} (${punishment.target})", false)
-                embed.addField("処罰ID", punishment.id.toString(), false)
-                embed.addField("処罰理由", punishment.reason, false)
-                embed.addField("被処罰者に対して公開", public.toString(), false)
+                embed.addField(SABMessages.General.Webhook.type, "${punishment.type.getName()} (${punishment.type.name})", false)
+                embed.addField(SABMessages.General.Webhook.operator, "${actor.name} (${actor.uniqueId})", false)
+                embed.addField(SABMessages.General.Webhook.server, punishment.server, false)
+                embed.addField(SABMessages.General.Webhook.proofText, text, false)
+                embed.addField(SABMessages.General.Webhook.proofId, id.toString(), false)
+                embed.addField(SABMessages.General.Webhook.target, "${punishment.name} (${punishment.target})", false)
+                embed.addField(SABMessages.General.Webhook.punishmentId, punishment.id.toString(), false)
+                embed.addField(SABMessages.General.Webhook.punishReason, punishment.reason, false)
+                embed.addField(SABMessages.General.Webhook.viewableByTarget, public.toString(), false)
                 if (text.startsWith("https://") &&
                     !text.contains(" ") &&
                     (text.endsWith(".png", true) || text.endsWith(".jpg", true) || text.endsWith(".gif", true))

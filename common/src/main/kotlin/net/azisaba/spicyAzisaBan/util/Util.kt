@@ -200,13 +200,12 @@ object Util {
 
     fun String.translate(): net.kyori.adventure.text.Component {
         val legacySectionString = ChatColor.translateAlternateColorCodes('&', this)
-            .replace("  ", "<white> </white><white> </white>")
         try {
             // try to parse as mini message
-            return MiniMessage.miniMessage().deserialize(legacySectionString)
+            return MiniMessage.miniMessage().deserialize(legacySectionString.replace("  ", "<white> </white><white> </white>"))
         } catch (_: Exception) {
             // fallback to legacy component
-            val component = LegacyComponentSerializer.legacySection().deserialize(legacySectionString)
+            val component = LegacyComponentSerializer.legacySection().deserialize(legacySectionString.replace("  ", "§f §f "))
             val miniMessageString = MiniMessage.miniMessage().serialize(component)
             return MiniMessage.miniMessage().deserialize(miniMessageString)
         }

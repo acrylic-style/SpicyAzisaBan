@@ -1,0 +1,465 @@
+# You can use there variables for all messages:
+# (except for variable itself like using %PREFIX% for general.prefix, they simply will be ignored)
+#
+# Available variables:
+# %PREFIX% - general.prefix
+# %CMD_PREFIX% - prefix in config.yml (might be empty)
+
+general:
+  prefix: "<red><bold>SpicyAzisaBan</bold></red> <dark_gray><bold>»</bold></dark_gray> "
+  missingPermissions: "%PREFIX%<red>権限がありません!</red>"
+  error: "<red>処理中に不明なエラーが発生しました。</red>"
+  invalid-syntax: "<red>構文エラー: %s</red>"
+
+  # available variables: default + %EXCEPTION_CLASS_NAME%, %EXCEPTION_MESSAGE%
+  errorDetailed: "<red>処理中に不明なエラーが発生しました。 (%EXCEPTION_CLASS_NAME%)</red>"
+
+  # these are "words" and you can't use variables here
+  none: "なし"
+  global: "全サーバー"
+  permanent: "無期限"
+  online: "<green>オンライン</green>"
+  offline: "<dark_red>オフライン</dark_red>"
+  previousPage: "前のページ"
+  nextPage: "次のページ"
+  time:
+    day: "%d日"
+    hour: "%d時間"
+    minute: "%d分"
+    second: "%d秒"
+  webhook:
+    type: "種類"
+    operator: "コマンド実行者"
+    punishOperator: "コマンド実行者 (処罰時)"
+    target: "被処罰者"
+    server: "サーバー"
+    newReason: "新しい理由"
+    oldReason: "古い理由"
+    unpunishReason: "解除理由"
+    punishReason: "処罰理由"
+    punishmentDateTime: "処罰日時"
+    punishmentId: "処罰ID"
+    unpunishId: "解除ID"
+    proofId: "証拠ID"
+    proofText: "証拠テキスト"
+    duration: "期間"
+    expiration: "期限"
+    viewableByTarget: "被処罰者が閲覧可能"
+    punishmentAdded: "処罰が追加されました。"
+    punishmentReasonChanged: "処罰の理由が変更されました。"
+    punishmentRemoved: "処罰が削除されました。"
+    proofAdded: "証拠が追加されました。"
+    proofUpdated: "証拠が更新されました。"
+    proofRemoved: "証拠が削除されました。"
+  # Available variables: %YEAR%, %MONTH%, %DAY%, %HOUR%, %MINUTE%, %SECOND% and %MILLIS%
+  datetime: "%YEAR%/%MONTH%/%DAY%-%HOUR%:%MINUTE%:%SECOND%"
+  failsafeKickMessage: "現在サーバーに参加することはできません。管理者にお問い合わせください。"
+
+commands:
+  general:
+    invalidGroup: "%PREFIX%<red>無効なグループ名です。</red>"
+    invalidServer: "%PREFIX%<red>無効なサーバー名です。</red>"
+    invalidPlayer: "%PREFIX%<red>プレイヤーが見つかりません。</red>"
+    invalidTime: "%PREFIX%<red>時間(<yellow>time=</yellow>)の形式が正しくありません。</red>"
+    invalidIPAddress: "%PREFIX%<red>IPアドレスの形式が正しくないか、処罰不可なIPアドレスです。</red>"
+    invalidPunishmentType: "%PREFIX%<red>無効な処罰タイプです。</red>"
+    invalidNumber: "%PREFIX%<red>無効な数値です。</red>"
+    timeNotSpecified: "%PREFIX%<red>時間が指定されていません。</red>"
+    # Available variables: default, %PLAYERS% - banned player names, %PLAYERS_COUNT%
+    samePunishmentAppliedToSameIPAddress: "<gray>%PLAYERS_COUNT%人の同じIPアドレスのプレイヤーにも同じ処罰が適用されました: %PLAYERS%</gray>"
+    alreadyPunished: "%PREFIX%<red>このアカウントはすでに(同じサーバー、同じ種類で)処罰されています!</red>"
+    removedFromServer: "<red>とあるプレイヤーがこの世界から抹消された。</red>"
+    offlinePlayer: "%PREFIX%<red>このプレイヤーはオフラインです。</red>"
+    notPunished: "%PREFIX%<red>このアカウントは処罰されていません!</red>"
+    noReasonSpecified: "%PREFIX%<red>理由が指定されていません!</red>"
+    noProofSpecified: "%PREFIX%<red>証拠が指定されていません!</red>"
+    punishmentNotFound: "%PREFIX%<red>処罰#%dが見つかりません!</red>"
+    proofNotFound: "%PREFIX%<red>証拠#%dが見つかりません!</red>"
+    viewable-proofs: "<red>閲覧可能な証拠:</red>"
+
+    # Available variables: %ID% - id of proof, %TEXT% - the text of proof, %PUBLIC% - always true (with color of green)
+    proof-entry: "  <red>-</red> <white>%TEXT%</white>"
+  sab:
+    setDebugLevel: "%PREFIX%<green>デバッグログレベルを<yellow>%d</yellow>に設定しました。</green>"
+    reloadedConfiguration: "%PREFIX%<green>設定を再読み込みしました。</green>"
+    clearedCache: "%PREFIX%<green>キャッシュを消去しました。</green>"
+    deleteGroupUnpunishReason: "グループ'%GROUP%'の削除" # Available variables: default, %GROUP% (group name being removed)
+    removedFromPunishmentHistory: "%PREFIX%<green>処罰<dark_gray>\\<<gray>punishmentHistory</gray>></dark_gray>#%ID%を削除しました。</green>" # Available variables: default, punishment
+    removedFromPunishment: "%PREFIX%<green>処罰<dark_gray>\\<<gray>punishments</gray>></dark_gray><green>#%ID%を削除しました。</green>" # Available variables: default, punishment
+    apiTableNotFound: "%PREFIX%<red>SpicyAzisaBan-APIのテーブルが存在しません。</red>"
+    accountNoLinkCode: "%PREFIX%<red>コードが一致しません。</red>"
+    accountLinking: "%PREFIX%<green>アカウントをリンク中...</green>"
+    # Available variables: default, %USERNAME% (username of linked web account)
+    accountLinkComplete: "%PREFIX%<green>アカウント[%USERNAME%]のリンクが完了しました。</green>"
+    accountUnlinked: "%PREFIX%<green>アカウントの連携をすべて解除しました。</green>"
+    # Available variables (all boolean values are colored automatically): default +
+    # %SERVER_VERSION% - BungeeCord version
+    # %DB_CONNECTED% - true if connection between database is active, false otherwise
+    # %DB_VERSION% - Database version (number)
+    # %DB_FAILSAFE% - database.failsafe in config.yml
+    # %UPTIME% - current server uptime
+    # %VERSION% - plugin version
+    # %IS_DEVBUILD% - is running dev build?
+    # %IS_DEBUGBUILD% - is running debug build?
+    # %SERVER_ID% - serverId in config.yml
+    info:
+      - "%PREFIX%- <aqua>インスタンス:</aqua>"
+      - "%PREFIX%    <gold>バージョン:</gold> <green>%VERSION%<green>"
+      - "%PREFIX%    <gold>Debugビルド:</gold> %IS_DEBUGBUILD%"
+      - "%PREFIX%    <gold>Devビルド:</gold> %IS_DEVBUILD%"
+      - "%PREFIX%    <gold>ロックダウン:</gold> %IS_LOCKDOWN%"
+      - "%PREFIX%- <aqua>サーバーバージョン</aqua>"
+      - "%PREFIX%    %SERVER_NAME% %SERVER_VERSION%"
+      - "%PREFIX%- <aqua>データベース</aqua>"
+      - "%PREFIX%    <gold>接続済み:</gold> %DB_CONNECTED%"
+      - "%PREFIX%    <gold>バージョン:</gold> %DB_VERSION%"
+      - "%PREFIX%    <gold>Failsafe:</gold> %DB_FAILSAFE%"
+      - "%PREFIX%- <aqua>Uptime:</aqua> <green>%UPTIME%</green>"
+
+  # Available variables (punishment):
+  # %DATE%
+  # %END_DATE% - date if it has expiration date, "N/A" if permanent
+  # %ID% - Punishment ID
+  # %PLAYER% - Player name or IP if IP-based bans
+  # %TARGET% - UUID of player or IP if IP-based bans
+  # %OPERATOR% - Player name of operator (or CONSOLE if the punishment was done from console)
+  # %TYPE% - Punishment type
+  # %REASON% - Punishment reason
+  # %SERVER% - Target server or group that the punishment applies to ("global" if applies to an entire network)
+  # %DURATION% - Times left until the punishment expires
+  # %TIME% - Duration of punishment
+  # %IS_EXPIRED% - <red>false</red> if expired, <green>true</green> otherwise
+  ban:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%ban <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gban <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にBanされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<reset><gray>で<yellow><italic>%OPERATOR%<reset><gray>からBanされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+    layout:
+      - "%PREFIX%<gray>永久BANされました!"
+      - ""
+      - ""
+      - "<red>対象サーバー <dark_gray><bold>» <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray><bold>» <gray><italic>%REASON%"
+      - ""
+      - "<gray>お問い合わせ:"
+      - "<yellow>Discord <dark_gray>» <red><underlined>coming soon"
+  tempban:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%tempban <player=...> <reason=\"...\"> <time=...> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gtempban <player=...> <reason=\"...\"> <time=...> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にTempBanされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<reset><gray>で<yellow><italic>%OPERATOR%<reset><gray>からTempBanされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout:
+      - "%PREFIX%<gray>一時的にBANされました!"
+      - ""
+      - ""
+      - "<red>対象サーバー <dark_gray><bold>» <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray><bold>» <gray><italic>%REASON%"
+      - "<red>期間 <dark_gray><bold>» <gray><italic>%DURATION%"
+      - ""
+      - "<gray>お問い合わせ:"
+      - "<yellow>Discord <dark_gray>» <red><underlined>coming soon"
+  ipban:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%ipban <target=Player/IP> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gipban <target=Player/IP> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にIPBanされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からIPBanされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+    layout:
+      - "%PREFIX%<gray>永久IP BANされました!"
+      - ""
+      - ""
+      - "<red>対象サーバー <dark_gray><bold>» <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray><bold>» <gray><italic>%REASON%"
+      - ""
+      - "<gray>お問い合わせ:"
+      - "<yellow>Discord <dark_gray>» <red><underlined>coming soon"
+  tempipban:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%tempipban <target=Player/IP> <reason=\"...\"> <time=...> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gtempipban <target=Player/IP> <reason=\"...\"> <time=...> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にTempIPBanされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からTempIPBanされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout:
+      - "%PREFIX%<gray>一時的にIP BANされました!"
+      - ""
+      - ""
+      - "<red>対象サーバー <dark_gray><bold>» <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray><bold>» <gray><italic>%REASON%"
+      - "<red>期間 <dark_gray><bold>» <gray><italic>%DURATION%"
+      - ""
+      - "<gray>お問い合わせ:"
+      - "<yellow>Discord <dark_gray>» <red><underlined>coming soon"
+  mute:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%mute <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gmute <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にMuteされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からMuteされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+    layout1: # layout that shows to a player when a player got muted
+      - "%PREFIX%<red>あなたは永久ミュートされました!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+    layout2: # layout that shows to a player when a player tries to speak after they got muted
+      - "%PREFIX%<red>あなたは永久ミュートされています!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+  tempmute:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%tempmute <player=...> <reason=\"...\"> <time=...> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gtempmute <player=...> <reason=\"...\"> <time=...> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にTempMuteされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からTempMuteされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout1: # layout that shows to a player when a player got muted
+      - "%PREFIX%<red>あなたは一時的にミュートされました!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%DURATION%"
+    layout2: # layout that shows to a player when a player tries to speak after they got muted
+      - "%PREFIX%<red>あなたは一時的にミュートされています!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%DURATION%"
+  ipmute:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%ipmute <target=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gipmute <target=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にIPMuteされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からIPMuteされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+    layout1: # layout that shows to a player when a player got muted
+      - "%PREFIX%<red>あなたは永久IPミュートされました!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+    layout2: # layout that shows to a player when a player tries to speak after they got muted
+      - "%PREFIX%<red>あなたは永久IPミュートされています!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+  tempipmute:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%tempipmute <target=...> <reason=\"...\"> <time=...> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gtempipmute <target=...> <reason=\"...\"> <time=...> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にTempIPMuteされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からTempIPMuteされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout1: # layout that shows to a player when a player got muted
+      - "%PREFIX%<red>あなたは一時的にIPミュートされました!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%DURATION%"
+    layout2: # layout that shows to a player when a player tries to speak after they got muted
+      - "%PREFIX%<red>あなたは一時的にIPミュートされています!"
+      - "<gray>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%DURATION%"
+  warning:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%warning <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gwarning <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にWarnされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からWarnされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout:
+      - "%PREFIX%<red>警告を受けました"
+      - "<red>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray>> <gray><italic>%REASON%"
+    title: "<red>あなたは警告を受けました!"
+    subtitle: "<gold>/%CMD_PREFIX%warns<yellow>で表示を解除することができます"
+  caution:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%caution <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gcaution <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にCautionされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からCautionされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+      - "<gray>期間 <dark_gray>> <gray><italic>%TIME%"
+    layout:
+      - "%PREFIX%<red>注意を受けました"
+      - "<red>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray>> <gray><italic>%REASON%"
+    title: "<red>あなたは注意を受けました!"
+    subtitle: "<gold>/%CMD_PREFIX%warns<yellow>で表示を解除することができます"
+  kick:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%kick <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gkick <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にKickされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からKickされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+    layout:
+      - "%PREFIX%<red>サーバーからキックされました"
+      - "<red>理由 <dark_gray>> <gray>%REASON%"
+  note:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%note <player=...> <reason=\"...\"> [server=...]"
+    globalUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%gnote <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にNoteされました!"
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からNoteされました。"
+      - "<gray>理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+  unpunish:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%unpunish <id=...> <reason=\"...\">"
+    unbanUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%unban <player=...> <reason=\"...\"> [server=...]"
+    unmuteUsage: "%PREFIX%<green>使用法: /%CMD_PREFIX%unmute <player=...> <reason=\"...\"> [server=...]"
+    done: "%PREFIX%<red><italic>%PLAYER%<reset><gray>は、正常にUnpunishされました!"
+    # %TYPE%, %PREASON%, %PID% can be used here
+    notify:
+      - "<red><italic>%PLAYER%<reset><gray>は、<yellow><italic>%SERVER%<gray>で<yellow><italic>%OPERATOR%<reset><gray>からUnpunishされました。"
+      - "<gray>処罰タイプ <dark_gray>> <gray><italic>%TYPE%"
+      - "<gray>処罰理由 <dark_gray>> <gray><italic>%PREASON%"
+      - "<gray>処罰ID <dark_gray>> <gray><italic>#%PID%"
+      - "<gray>解除理由 <dark_gray>> <gray><italic>%REASON%"
+      - "<gray>ID <dark_gray>> <gray><italic>#%ID%"
+  changereason:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%changereason <id=...> <reason=\"...\">"
+    done: "%PREFIX%<gray>処罰<green>#%ID%<gray>は正常に更新されました。"
+  addproof:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%addproof <id=...> <text=\"...\"> [public]"
+    # %PID% can be used here (punishment id), %ID% for proof id, %TEXT% for proof text, and %PUBLIC% for colored true/false value
+    done: "%PREFIX%<gray>処罰<green>#%PID%<gray>に証拠を追加しました。<dark_gray>(<gray>ID: <yellow>%ID%<white>, <gray>Public: %PUBLIC%<dark_gray>)"
+  updateproof:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%updateproof <id=...> [text=\"...\"] [public]"
+    # %PID% can be used here (punishment id), %ID% for proof id, %TEXT% for proof text, and %PUBLIC% for colored true/false value
+    done: "%PREFIX%<gray>処罰<green>#%PID%<gray>の証拠<green>#%ID%<gray>は正常に更新されました。"
+  delproof:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%delproof <id=...>"
+    # %PID% can be used here (punishment id), and %ID% is proof id
+    # and %TEXT% for original proof text
+    done: "%PREFIX%<gray>処罰<green>#%PID%<gray>から証拠を削除しました。<dark_gray>(<gray>ID: <yellow>%ID%<dark_gray>)"
+
+  seen:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%seen <Player/IP>"
+    searching: "%PREFIX%<yellow>プレイヤーを検索中..."
+    # Available variables: %PLAYER%, %SINCE%, %STATUS%, %NAME_HISTORY%, %IP%, %HOSTNAME%, %IP_HISTORY%,
+    # %SAME_IP_PLAYERS%, %SAME_IP_PLAYERS_COUNT%, %FIRST_LOGIN%, %FIRST_LOGIN_ATTEMPT%, %LAST_LOGIN%, %LAST_LOGIN_ATTEMPT%
+    layout:
+      - "%PREFIX%<red><italic>%PLAYER%<yellow>は<red>%SINCE%前<yellow>から%STATUS%<yellow>です。"
+      - "<gray>UUID <dark_gray>> <click:copy_to_clipboard:%UUID%><hover:show_text:クリックでコピー><yellow><italic>%UUID%</italic></yellow></hover></click>"
+      - "<gray>最初のログイン <dark_gray>> <yellow><italic>%FIRST_LOGIN%"
+      - "<gray>最初のログイン試行 <dark_gray>> <yellow><italic>%FIRST_LOGIN_ATTEMPT%"
+      - "<gray>最近のログイン <dark_gray>> <yellow><italic>%LAST_LOGIN%"
+      - "<gray>最近のログイン試行 <dark_gray>> <yellow><italic>%LAST_LOGIN_ATTEMPT%"
+      - "<gray>過去の名前 <dark_gray>> <yellow><italic>%NAME_HISTORY%"
+      - "<gray>最近のIPアドレス <dark_gray>> <yellow><italic>%IP% <gray>(<yellow>%HOSTNAME%<gray>)"
+      - "<gray>過去のすべてのIPアドレス <dark_gray>> <yellow><italic>%IP_HISTORY%"
+      - "<gray>同じIPで接続しているプレイヤー <dark_gray>> <gold>%SAME_IP_PLAYERS%"
+    # Available variables: %PLAYERS_COUNT%, %PLAYERS%, %HOSTNAME%, %IP_ADDRESS%
+    # * = they have different ip now
+    # green player name = currently online
+    layoutIP:
+      - "%PREFIX%<red><italic>%IP_ADDRESS% <dark_gray>(<yellow><italic>%HOSTNAME%<dark_gray>)<yellow>は過去に%PLAYERS_COUNT%個のアカウントで接続しています:"
+      - "<gold>%PLAYERS%"
+  warns:
+    # Available variables: default
+    notWarnedYet: "%PREFIX%<red><italic>まだ警告を受けていません。"
+    header: "%PREFIX%<red>有効な警告一覧:"
+
+    # Available variables: punishment, default
+    layout:
+      - "<dark_gray>[<yellow>%DATE%<dark_gray>]"
+      - "<red>タイプ <dark_gray>> <gray><italic>%TYPE%"
+      - "<red>対象サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<red>理由 <dark_gray>> <gray><italic>%REASON%"
+  history:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%history <target=Player/IP> [page=...] [--all] [--active]"
+    # Available variables: %TARGET%
+    header: "%PREFIX%<red><italic>%TARGET%<gray>の履歴:"
+    # Available variables: variables of punishment + %DATE%, %STRIKETHROUGH_IF_UNPUNISHED%, %UNPUNISH_REASON%,
+    # %UNPUNISH_ID%, %UNPUNISH_OPERATOR%, %FLAGS%
+    layout:
+      - "<dark_gray>[<yellow>%DATE%<dark_gray>] <dark_gray>(<yellow>/%CMD_PREFIX%proofs %ID%<gray>で証拠を表示<dark_gray>)"
+      - "<red>名前/IP <dark_gray>> <gray><italic>%PLAYER%"
+      - "<red>タイプ <dark_gray>> <gray><italic>%TYPE%"
+      - "<red>期間 <dark_gray>> <gray><italic>%STRIKETHROUGH_IF_UNPUNISHED%%TIME% <gray>(<yellow>期限切れ: %IS_EXPIRED%<gray>)"
+      - "<red>理由 <dark_gray>> <gray><italic>%REASON% %UNPUNISH_REASON%"
+      - "<red>ID <dark_gray>> <gray><italic>#%ID% %UNPUNISH_ID%"
+      - "<red>サーバー <dark_gray>> <gray><italic>%SERVER%"
+      - "<red>執行者 <dark_gray>> <gray><italic>%OPERATOR% %UNPUNISH_OPERATOR%"
+      - "<red>フラグ <dark_gray>> <gray><italic>%FLAGS%"
+    # Available variables: %CURRENT_PAGE%, %MAX_PAGE%, %COUNT%
+    footer: "<gray>ページ <yellow><italic>%CURRENT_PAGE%<gray>/<yellow><italic>%MAX_PAGE% <dark_gray>| <gray>処罰件数: <yellow><italic>%COUNT%"
+    # Available variables: %REASON%
+    unpunishReason: "<dark_gray>(<gray>解除理由: <yellow>%REASON%<dark_gray>)"
+    # Available variables: %ID%
+    unpunishId: "<dark_gray>(<gray>解除ID: <yellow>%ID%<dark_gray>)"
+    # Available variables: %OPERATOR%
+    unpunishOperator: "<dark_gray>(<gray>解除者: <yellow>%OPERATOR%<dark_gray>)"
+    # Available variables: default
+    invalidArguments: "%PREFIX%<yellow>--all<red>と<yellow>--active<red>を同時に使用することはできません。"
+  check:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%check <target=Player/IP> [--ip] [--only]"
+    searching: "%PREFIX%<yellow>プレイヤーを検索中..."
+    # Available variables: %NAME%, %UUID%, %IP%, %HOSTNAME%, %MUTE_COUNT%, %BAN_COUNT%, %WARNING_COUNT%,
+    # %CAUTION_COUNT%, %NOTE_COUNT%, %KICK_COUNT%, %BAN_INFO%, %MUTE_INFO%
+    layout:
+      - "<red>プレイヤー <dark_gray>> <yellow>%NAME% <dark_gray>(<yellow>%UUID%<dark_gray>)"
+      - "<red>IPアドレス <dark_gray>> <yellow>%IP% <dark_gray>(<yellow>%HOSTNAME%<dark_gray>)"
+      - "<red>Mute <dark_gray>> <gray>%MUTE_INFO%"
+      - "<red>Ban <dark_gray>> <gray>%BAN_INFO%"
+      - "<red>警告数 <dark_gray>> <gray>%WARNING_COUNT%"
+      - "<red>注意数 <dark_gray>> <gray>%CAUTION_COUNT%"
+      - "<red>ノート <dark_gray>> <gray>%NOTE_COUNT%"
+      - "<red>キック <dark_gray>> <gray>%KICK_COUNT%"
+    # Available variables: %IP%, %HOSTNAME%, %MUTE_COUNT%, %BAN_COUNT%, %WARNING_COUNT%, %CAUTION_COUNT%, %NOTE_COUNT%,
+    # %KICK_COUNT%, %BAN_INFO%, %MUTE_INFO%
+    layoutIP:
+      - "<red>IPアドレス <dark_gray>> <yellow>%IP% <dark_gray>(<yellow>%HOSTNAME%<dark_gray>)"
+      - "<red>Mute <dark_gray>> <gray>%MUTE_INFO%"
+      - "<red>Ban <dark_gray>> <gray>%BAN_INFO%"
+      - "<red>警告数 <dark_gray>> <gray>%WARNING_COUNT%"
+      - "<red>注意数 <dark_gray>> <gray>%CAUTION_COUNT%"
+      - "<red>ノート <dark_gray>> <gray>%NOTE_COUNT%"
+    # Available variables for banInfo and muteInfo: default, punishment
+    banInfo: "<red>%DURATION% <dark_gray>(<gray>ID: <yellow>#%ID%<gray>, <gray>理由: <yellow><italic>%REASON%<dark_gray>)"
+    muteInfo: "<red>%DURATION% <dark_gray>(<gray>ID: <yellow>#%ID%<gray>, <gray>理由: <yellow><italic>%REASON%<dark_gray>)"
+    cannotUseTargetAndID: "%PREFIX%<red><yellow>target=<red>と<yellow>id=<red>を併用することはできません。"
+  proofs:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%proofs <ID>"
+    # Available variables: punishment + %PID% (punishment id)
+    header: "%PREFIX%<yellow>処罰<green>#%PID%<yellow>の証拠一覧:"
+    # Available variables: %PID% (punishment id), %ID% (proof id), %TEXT% (proof text), %PUBLIC% (colored true/false value)
+    layout:
+      - "<red><italic>証拠ID #%ID% <gray>(公開: %PUBLIC%<gray>) <dark_gray>> <yellow><italic>%TEXT%"
+  banlist:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%banlist [page=...] [type=...] [server=...] [--all] [--active]"
+    # Available variables: default
+    header: "%PREFIX%<gray>処罰履歴:"
+    # Available variables: %CURRENT_PAGE%, %MAX_PAGE%, %COUNT%
+    footer: "<gray>ページ <yellow><italic>%CURRENT_PAGE%<gray>/<yellow><italic>%MAX_PAGE% <dark_gray>| <gray>処罰件数: <yellow><italic>%COUNT%"
+    # Available variables: default
+    invalidArguments: "%PREFIX%<yellow>--all<red>と<yellow>--active<red>を同時に使用することはできません。"
+  lockdown:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%lockdown <true/false>"
+    lockdown:
+      - "%PREFIX%<red>現在新規参加者を受け付けていません。"
+      - "<red>しばらく時間が経った後に再参加してください。"
+    # Available variables: default, %PLAYER%, %IP_ADDRESS%
+    lockdownJoinAttempt: "<yellow>[Lockdown] <gray>新規プレイヤー'<yellow><italic>%PLAYER%<reset><gray>'が参加しようとしました。IPアドレス: %IP_ADDRESS%"
+    # Available variables for (enabled|disabled)Lockdown: default, %ACTOR% (actor who toggled the lockdown)
+    enabledLockdown: "%PREFIX%<yellow><italic>%ACTOR%<reset><gray>がサーバーロックダウンを<yellow>有効<gray>にしました。"
+    disabledLockdown: "%PREFIX%<yellow><italic>%ACTOR%<reset><gray>がサーバーロックダウンを<yellow>無効<gray>にしました。"
+  namehistory:
+    usage: "%PREFIX%<green>使用法: /%CMD_PREFIX%namehistory <player>"

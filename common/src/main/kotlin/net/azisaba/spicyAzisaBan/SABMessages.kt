@@ -98,6 +98,7 @@ object SABMessages {
         val previousPage get() = obj.getMessage("previousPage", defObj.getMessage("previousPage"))
         val nextPage get() = obj.getMessage("nextPage", defObj.getMessage("nextPage"))
         val datetime get() = obj.getMessage("datetime", defObj.getMessage("datetime"))
+        val failsafeKickMessage get() = obj.getMessage("failsafeKickMessage", defObj.getMessage("failsafeKickMessage"))
 
         object Time {
             private val defObj get() = General.defObj.getObj("time")
@@ -106,6 +107,34 @@ object SABMessages {
             val hour get() = obj.getMessage("hour", defObj.getMessage("hour"))
             val minute get() = obj.getMessage("minute", defObj.getMessage("minute"))
             val second get() = obj.getMessage("second", defObj.getMessage("second"))
+        }
+
+        object Webhook {
+            private val defObj get() = General.defObj.getObj("webhook")
+            private val obj get() = General.obj.getObj("webhook")
+            val type get() = obj.getMessage("type", defObj.getMessage("type"))
+            val operator get() = obj.getMessage("operator", defObj.getMessage("operator"))
+            val punishOperator get() = obj.getMessage("punishOperator", defObj.getMessage("punishOperator"))
+            val target get() = obj.getMessage("target", defObj.getMessage("target"))
+            val server get() = obj.getMessage("server", defObj.getMessage("server"))
+            val newReason get() = obj.getMessage("newReason", defObj.getMessage("newReason"))
+            val oldReason get() = obj.getMessage("oldReason", defObj.getMessage("oldReason"))
+            val unpunishReason get() = obj.getMessage("unpunishReason", defObj.getMessage("unpunishReason"))
+            val punishReason get() = obj.getMessage("punishReason", defObj.getMessage("punishReason"))
+            val punishmentDateTime get() = obj.getMessage("punishmentDateTime", defObj.getMessage("punishmentDateTime"))
+            val punishmentId get() = obj.getMessage("punishmentId", defObj.getMessage("punishmentId"))
+            val unpunishId get() = obj.getMessage("unpunishId", defObj.getMessage("unpunishId"))
+            val proofId get() = obj.getMessage("proofId", defObj.getMessage("proofId"))
+            val proofText get() = obj.getMessage("proofText", defObj.getMessage("proofText"))
+            val duration get() = obj.getMessage("duration", defObj.getMessage("duration"))
+            val expiration get() = obj.getMessage("expiration", defObj.getMessage("expiration"))
+            val viewableByTarget get() = obj.getMessage("viewableByTarget", defObj.getMessage("viewableByTarget"))
+            val punishmentAdded get() = obj.getMessage("punishmentAdded", defObj.getMessage("punishmentAdded"))
+            val punishmentReasonChanged get() = obj.getMessage("punishmentReasonChanged", defObj.getMessage("punishmentReasonChanged"))
+            val punishmentRemoved get() = obj.getMessage("punishmentRemoved", defObj.getMessage("punishmentRemoved"))
+            val proofAdded get() = obj.getMessage("proofAdded", defObj.getMessage("proofAdded"))
+            val proofUpdated get() = obj.getMessage("proofUpdated", defObj.getMessage("proofUpdated"))
+            val proofRemoved get() = obj.getMessage("proofRemoved", defObj.getMessage("proofRemoved"))
         }
     }
 

@@ -48,7 +48,7 @@ object DelProofCommand: Command() {
         val list = SpicyAzisaBan.instance.connection.proofs.delete(FindOptions.Builder().addWhere("id", id).setLimit(1).build()).complete()
         if (list.isEmpty()) return actor.send(SABMessages.Commands.General.proofNotFound.replaceVariables().format(id).translate())
         val proof = Proof.fromTableData(list[0]).complete()!!
-        proof.sendWebhook(actor, "証拠が削除されました。", Color.RED)
+        proof.sendWebhook(actor, SABMessages.General.Webhook.proofRemoved, Color.RED)
         actor.send(
             SABMessages.Commands.DelProof.done
                 .replaceVariables("id" to proof.id.toString(), "pid" to proof.punishment.id.toString(), "text" to proof.text)

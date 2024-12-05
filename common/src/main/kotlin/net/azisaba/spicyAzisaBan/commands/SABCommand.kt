@@ -54,7 +54,7 @@ object SABCommand: Command() {
     private val groupRemoveConfirmation = mutableMapOf<UUID, String>()
 
     private fun Actor.sendHelp() {
-        send("$PREFIX<green>SpicyAzisaBan commands".translate())
+        send("${SABMessages.General.prefix}<green>SpicyAzisaBan commands".translate())
         if (hasPermission("sab.command.spicyazisaban.group")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab group <group>")
         if (hasPermission("sab.command.spicyazisaban.info")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab info")
         if (hasPermission("sab.command.spicyazisaban.creategroup")) send("${ChatColor.RED}> ${ChatColor.AQUA}/sab creategroup <group>")
@@ -131,7 +131,7 @@ object SABCommand: Command() {
                                         .addValue("server", server)
                                         .build()
                                 ).complete()
-                                actor.send("$PREFIX${ChatColor.GREEN}グループにサーバー($server)を追加しました。")
+                                actor.send("$PREFIX${ChatColor.GREEN}Added server ($server) to group ($groupName).")
                             }
                             "remove" -> {
                                 val server = args[3]
@@ -141,12 +141,12 @@ object SABCommand: Command() {
                                         .addWhere("server", server)
                                         .build()
                                 ).complete()
-                                actor.send("$PREFIX${ChatColor.GREEN}グループからサーバーを(そのグループに入っている場合は)除外しました。")
+                                actor.send("$PREFIX${ChatColor.GREEN}Removed server ($server) from group ($groupName).")
                             }
                             "info" -> {
                                 val servers = SpicyAzisaBan.instance.connection.getServersByGroup(args[1]).complete()
-                                actor.send("$PREFIX${ChatColor.AQUA}グループ: ${ChatColor.RESET}$groupName")
-                                actor.send("$PREFIX- ${ChatColor.AQUA}サーバー:")
+                                actor.send("$PREFIX${ChatColor.AQUA}Group: ${ChatColor.RESET}$groupName")
+                                actor.send("$PREFIX- ${ChatColor.AQUA}Servers:")
                                 servers.forEach { server ->
                                     actor.send("$PREFIX   - ${ChatColor.GREEN}$server")
                                 }
@@ -215,7 +215,7 @@ object SABCommand: Command() {
             }
             "link" -> {
                 if (actor !is PlayerActor) {
-                    return actor.send("${ChatColor.RED}NO ${ChatColor.AQUA}CONSOLE ${ChatColor.GOLD}ZONE")
+                    return
                 }
                 if (args.size <= 1) return
                 SpicyAzisaBan.instance.connection
@@ -278,11 +278,11 @@ object SABCommand: Command() {
                     (SpicyAzisaBan.instance.getPlatformType() != PlatformType.CLI && groupRemoveConfirmation[actor.uniqueId] != groupName)
                 ) {
                     println("send")
-                    actor.send("$PREFIX${ChatColor.GOLD}グループ「${ChatColor.YELLOW}$groupName${ChatColor.GOLD}」を削除しますか？関連付けられているすべての処罰が解除されます。")
+                    actor.send("$PREFIX${ChatColor.GOLD}Are you sure want to remove group ${ChatColor.YELLOW}$groupName${ChatColor.GOLD}? All punishments associated with this group will be removed and this action cannot be undone.")
                     if (SpicyAzisaBan.instance.getPlatformType() == PlatformType.CLI) {
-                        actor.send("$PREFIX${ChatColor.GOLD}削除するには${ChatColor.YELLOW}--confirm${ChatColor.GOLD}を入れて実行してください。")
+                        actor.send("$PREFIX${ChatColor.GOLD}If you are sure, re-type the command with ${ChatColor.YELLOW}--confirm${ChatColor.GOLD}.")
                     } else {
-                        actor.send("$PREFIX${ChatColor.GOLD}削除するには10秒以内に同じコマンドをもう一度実行してください。")
+                        actor.send("$PREFIX${ChatColor.GOLD}If you are sure, re-enter the command within 10 seconds.")
                     }
                     if (SpicyAzisaBan.instance.getPlatformType() != PlatformType.CLI) {
                         groupRemoveConfirmation[actor.uniqueId] = groupName
@@ -299,7 +299,7 @@ object SABCommand: Command() {
             .thenDo { SpicyAzisaBan.instance.connection.serverGroup.delete(FindOptions.Builder().addWhere("group", groupName).build()).complete() }
             .thenDo {
                 SpicyAzisaBan.instance.connection.cachedGroups.set(null)
-                actor.send("$PREFIX${ChatColor.GREEN}グループに関連付けられた処罰を削除中...")
+                actor.send("$PREFIX${ChatColor.GREEN}Removing all punishments associated with group ${ChatColor.YELLOW}$groupName${ChatColor.GREEN}...")
                 SpicyAzisaBan.instance.connection.punishments
                     .delete(FindOptions.Builder().addWhere("server", groupName).build())
                     .then { it.map { td -> Punishment.fromTableData(td) } }
@@ -321,11 +321,11 @@ object SABCommand: Command() {
                     .catch { actor.sendErrorMessage(it) }
                     .complete()
                 groupRemoveConfirmation.remove(actor.uniqueId)
-                actor.send("$PREFIX${ChatColor.GREEN}グループ「${ChatColor.GOLD}$groupName${ChatColor.GREEN}」を削除しました。")
+                actor.send("$PREFIX${ChatColor.GREEN}Group ${ChatColor.GOLD}$groupName${ChatColor.GREEN} has been removed.")
             }
             .catch {
                 if (it::class.java == Exception::class.java) return@catch
-                actor.send("$PREFIX${ChatColor.RED}グループの削除に失敗しました。")
+                actor.send("$PREFIX${ChatColor.RED}Failed to delete group $groupName.")
                 SpicyAzisaBan.LOGGER.warning("Failed to delete group $groupName")
                 it.printStackTrace()
             }
@@ -339,7 +339,7 @@ object SABCommand: Command() {
         return SpicyAzisaBan.instance.connection.getAllGroups()
             .then { list ->
                 if (list.any { it.equals(groupName, true) }) {
-                    actor.send("$PREFIX${ChatColor.RED}この名前はすでに使用されています。")
+                    actor.send("$PREFIX${ChatColor.RED}Group ${ChatColor.GOLD}$groupName${ChatColor.RED} already exists.")
                     throw Exception()
                 }
             }
@@ -351,10 +351,10 @@ object SABCommand: Command() {
                 }
             }
             .thenDo { SpicyAzisaBan.instance.connection.cachedGroups.set(null) }
-            .then { actor.send("${ChatColor.GREEN}グループ「${ChatColor.GOLD}$groupName${ChatColor.GREEN}」を作成しました。") }
+            .then { actor.send("${ChatColor.GREEN}Group ${ChatColor.GOLD}$groupName${ChatColor.GREEN} has been created.") }
             .catch {
                 if (it::class.java == Exception::class.java) return@catch
-                actor.send("$PREFIX${ChatColor.RED}グループの作成に失敗しました。")
+                actor.send("$PREFIX${ChatColor.RED}Failed to create group $groupName.")
                 it.printStackTrace()
             }
     }

@@ -67,7 +67,7 @@ object UpdateProofCommand: Command() {
         if (public != null) builder.addValue("public", public)
         SpicyAzisaBan.instance.connection.proofs.update(builder.build()).complete()
         Proof(proof.id, proof.punishment, text ?: proof.text, public ?: proof.public)
-            .sendWebhook(actor, "証拠が更新されました。", Color.YELLOW)
+            .sendWebhook(actor, SABMessages.General.Webhook.proofUpdated, Color.YELLOW)
         actor.send(
             SABMessages.Commands.UpdateProof.done
                 .replaceVariables(

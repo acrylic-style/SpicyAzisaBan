@@ -74,7 +74,7 @@ object AddProofCommand: Command() {
             if (e.message == "cancel") return
             throw e
         }
-        Proof(proofId, p, text, public).sendWebhook(actor, "証拠が追加されました。", Color.GREEN)
+        Proof(proofId, p, text, public).sendWebhook(actor, SABMessages.General.Webhook.proofAdded, Color.GREEN)
         actor.send(
             SABMessages.Commands.AddProof.done
                 .replaceVariables(

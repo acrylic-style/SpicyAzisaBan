@@ -44,12 +44,12 @@ object NameHistoryCommand : Command() {
                             "${if (isLast) "<green>" else "<aqua>"}<underlined>$s<reset>"
                         } else {
                             if (isLast) {
-                                "<green>$s"
+                                "<green>$s</green>"
                             } else {
-                                "<yellow>$s"
+                                "<yellow>$s</yellow>"
                             }
                         }
-                    }.joinToString("<gray> -> ").let { actor.send(it) }
+                    }.joinToString("<gray> -> </gray>").translate().let { actor.send(it) }
                 }
             }
             .catch { actor.sendErrorMessage(it) }

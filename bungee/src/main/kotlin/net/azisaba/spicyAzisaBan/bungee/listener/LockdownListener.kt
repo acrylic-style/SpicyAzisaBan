@@ -1,5 +1,6 @@
 package net.azisaba.spicyAzisaBan.bungee.listener
 
+import net.azisaba.spicyAzisaBan.SABMessages
 import net.md_5.bungee.api.chat.TextComponent
 import net.md_5.bungee.api.event.PreLoginEvent
 import net.md_5.bungee.api.plugin.Listener
@@ -9,6 +10,11 @@ object LockdownListener : Listener {
     @EventHandler
     fun onLogin(e: PreLoginEvent) {
         e.isCancelled = true
-        e.setCancelReason(*TextComponent.fromLegacyText("現在サーバーには参加できません。サーバー管理者へお問い合わせください。 &8(SAB: Initialization error)"))
+        try {
+            e.setCancelReason(*TextComponent.fromLegacyText("${SABMessages.General.failsafeKickMessage} (SAB: Initialization error)"))
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            e.setCancelReason(*TextComponent.fromLegacyText("You cannot join the server right now. Please contact the server administrator. (SAB: Initialization error)"))
+        }
     }
 }
