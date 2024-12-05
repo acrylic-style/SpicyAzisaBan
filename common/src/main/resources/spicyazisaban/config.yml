@@ -67,3 +67,16 @@ customBannedMessage:
   # value = message
   rpg:
     - "&cA player has been deleted from the server."
+
+# Discord webhook URLs
+# If you don't need this feature, simply uncomment the line below.
+#webhookURLs: { __fallback__: {} }
+# and comment out the lines below.
+webhookURLs:
+  __fallback__:
+    default: "https://discord.com/api/webhooks/123456/secret"
+  server1:
+    default: "https://discord.com/api/webhooks/123456/secret"
+  global:
+    default: "https://discord.com/api/webhooks/123456/secret"
+    ban: "https://discord.com/api/webhooks/789012/secret"
