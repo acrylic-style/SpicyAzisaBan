@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.azisaba.spicyazisaban"
-version = "2.0.0-${getBranch()}-${getGitHash()}${if (hasUncommittedChanges()) "-debug" else ""}"
+version = "2.0.1"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -100,7 +100,7 @@ subprojects {
                 include("**")
 
                 val tokenReplacementMap = mapOf(
-                    "version" to project.version,
+                    "version" to "${project.version}${getBranch()}-${getGitHash()}${if (hasUncommittedChanges()) "-debug" else ""}",
                     "name" to project.rootProject.name,
                     "debugBuild" to hasUncommittedChanges().toString(),
                     "devBuild" to (getBranch() != "main").toString(),

@@ -399,6 +399,7 @@ object Util {
      * Sends the message to specified server after 100 + (random time in range 0-300) seconds.
      */
     fun ServerInfo.broadcastMessageAfterRandomTime(server: String = this.name) {
+        if (SABMessages.Commands.General.removedFromServer.isEmpty()) return
         SpicyAzisaBan.instance.connection.getGroupByServer(server).then { serverOrGroup ->
             val s = SABMessages.getBannedMessage(serverOrGroup ?: server).replaceVariables().translate()
             val random = 100 + (Math.random() * 300).toLong()
