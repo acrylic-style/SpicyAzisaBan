@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.azisaba.spicyazisaban"
-version = "2.0.1"
+version = "2.0.2"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
